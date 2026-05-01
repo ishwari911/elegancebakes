@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us — Elegance Bakes</title>
+  <meta name="description"
+    content="Learn the story behind Elegance Bakes — a Mumbai home bakery built on love, quality ingredients, and a passion for beautiful custom cakes.">
+  <link rel="icon" href="logo.png">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="js/auth.js"></script>
+  <script src="js/loader.js"></script>
+  <script src="js/toast.js"></script>
+  <script src="js/scroll-reveal.js"></script>
+  <script src="js/header-auth.js"></script>
+  <style>
+    /* auth modal */
+    .auth-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      z-index: 99999;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .auth-modal.active {
+      display: flex;
+    }
+
+    .auth-modal-inner {
+      background: #fff;
+      padding: 36px;
+      border-radius: 18px;
+      max-width: 420px;
+      width: 90%;
+      position: relative;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    }
+
+    .close-btn-modal {
+      position: absolute;
+      top: 10px;
+      right: 14px;
+      background: none;
+      border: none;
+      font-size: 28px;
+      cursor: pointer;
+      color: #888;
+    }
+
+    .input-box {
+      margin: 14px 0;
+    }
+
+    .input-box input {
+      width: 100%;
+      padding: 13px;
+      border: 2px solid #d4a574;
+      border-radius: 10px;
+      font-size: 15px;
+      font-family: 'Playfair Display', serif;
+      box-sizing: border-box;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #d4a574, #a0724a);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-family: 'Playfair Display', serif;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    /* shared */
+    .content-section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 80px 24px;
+    }
+
+    .tag-line {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #a0724a;
+      margin-bottom: 12px;
+    }
+
+    .section-heading {
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(2.4rem, 6vw, 3.8rem);
+      color: #6a3c3c;
+      margin: 0 0 20px;
+      line-height: 1.15;
+    }
+
+    .section-body {
+      font-size: 17px;
+      color: #8b5b5b;
+      line-height: 1.85;
+      margin-bottom: 20px;
+    }
+
+    /* about hero */
+    .about-hero {
+      background: #f5ecea;
+      padding: 40px 24px 60px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .about-hero::after {
+      content: '🎂';
+      position: absolute;
+      font-size: 18rem;
+      opacity: 0.04;
+      right: -40px;
+      bottom: -40px;
+      pointer-events: none;
+    }
+
+    .about-hero h1 {
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(3rem, 8vw, 6rem);
+      color: #6a3c3c;
+      margin: 16px 0;
+      line-height: 1.1;
+    }
+
+    .about-hero p {
+      font-size: clamp(15px, 2vw, 19px);
+      color: #8b5b5b;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.8;
+    }
+
+    /* story */
+    .story-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .story-img {
+      width: 100%;
+      height: 460px;
+      object-fit: cover;
+      border-radius: 28px;
+      box-shadow: 0 30px 70px rgba(106, 60, 60, 0.2);
+    }
+
+    /* values */
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 28px;
+      margin-top: 44px;
+    }
+
+    .value-card {
+      background: white;
+      border-radius: 22px;
+      padding: 32px 24px;
+      box-shadow: 0 10px 32px rgba(212, 165, 116, 0.13);
+      border: 1px solid rgba(212, 165, 116, 0.2);
+      text-align: center;
+      transition: transform 0.3s;
+    }
+
+    .value-card:hover {
+      transform: translateY(-6px);
+    }
+
+    .value-icon {
+      font-size: 2.4rem;
+      margin-bottom: 14px;
+    }
+
+    .value-card h3 {
+      font-size: 18px;
+      color: #6a3c3c;
+      font-weight: 700;
+      margin: 0 0 10px;
+    }
+
+    .value-card p {
+      font-size: 14px;
+      color: #8b5b5b;
+      line-height: 1.7;
+      margin: 0;
+    }
+
+    /* milestones */
+    .milestones {
+      background: linear-gradient(135deg, #6a3c3c, #a0724a);
+      padding: 70px 24px;
+    }
+
+    .milestones-inner {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 32px;
+      text-align: center;
+    }
+
+    .milestone-num {
+      font-size: 2.6rem;
+      font-weight: 700;
+      color: white;
+      font-family: 'Playfair Display', serif;
+    }
+
+    .milestone-label {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.75);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 4px;
+    }
+
+    /* imagery */
+    .img-mosaic {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-rows: 240px 240px;
+      gap: 16px;
+      margin-top: 48px;
+      border-radius: 24px;
+      overflow: hidden;
+    }
+
+    .img-mosaic img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .img-mosaic img:hover {
+      transform: scale(1.04);
+    }
+
+    .img-mosaic img:first-child {
+      grid-row: span 2;
+    }
+
+    /* promise */
+    .promise-wrap {
+      background: #fff7f4;
+      padding: 80px 0;
+    }
+
+    .cta-primary {
+      background: linear-gradient(135deg, #6a3c3c, #a0724a);
+      color: white;
+      padding: 15px 36px;
+      border-radius: 50px;
+      font-family: 'Playfair Display', serif;
+      font-size: 16px;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.3s;
+      box-shadow: 0 10px 28px rgba(106, 60, 60, 0.3);
+    }
+
+    .cta-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 18px 42px rgba(106, 60, 60, 0.4);
+      color: white;
+    }
+
+    @media(max-width:768px) {
+      .story-grid {
+        grid-template-columns: 1fr;
+        gap: 36px;
+      }
+
+      .img-mosaic {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto;
+      }
+
+      .img-mosaic img:first-child {
+        grid-row: span 1;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="header-container">
+      <div class="logo">
+        <img src="logo.png" alt="Elegance Bakes" onclick="window.location.href='index.html'">
+      </div>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="menu.html">Menu</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="about.html" class="active">About</a></li>
+        </ul>
+      </nav>
+      <div class="header-icons">
+        <a href="login.html" id="loginIcon" class="header-icon-link" title="Login">
+          <img src="user.png" alt="Login">
+        </a>
+        <div id="userMenu" class="user-menu-wrap">
+          <div id="userInitial" class="user-avatar" onclick="window.location.href='dashboard.html'" title="Dashboard">U
+          </div>
+          <button class="logout-btn" onclick="logoutHeader()" title="Logout">🚪</button>
+        </div>
+        <a href="cart.html" class="header-icon-link" title="Cart">
+          <img src="cart.png" alt="Cart">
+        </a>
+        <a href="https://www.instagram.com/elegance_bakes" target="_blank" class="header-icon-link" title="Instagram">
+          <img src="instagram.png" alt="Instagram">
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ABOUT HERO -->
+  <section class="about-hero">
+    <span
+      style="display:inline-block;background:rgba(212,165,116,.15);color:#a0724a;border:1px solid rgba(212,165,116,.4);padding:8px 22px;border-radius:30px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;">Est.
+      2022 · Mumbai</span>
+    <h1>The Story Behind<br>Every Cake</h1>
+    <p>A passion project turned into Mumbai's most loved home bakery — learn who we are, what we believe in, and why we
+      bake.</p>
+  </section>
+
+
+  <!-- OUR STORY -->
+  <section class="content-section">
+    <div class="story-grid">
+      <div class="reveal-right">
+        <p class="tag-line">How It Started</p>
+        <h2 class="section-heading">A Kitchen Full of Dreams</h2>
+        <p class="section-body">
+          Elegance Bakes was born in 2022 from a simple love of baking and a desire to make every celebration feel truly
+          special. What started as weekend baking for family and friends quickly grew into something much bigger — a
+          small-batch home bakery trusted by hundreds of families across Mumbai.
+        </p>
+        <p class="section-body">
+          Every cake we make is baked fresh to order, with real ingredients and no preservatives. We don't do mass
+          production — each creation gets the time, care, and creativity it deserves because we know your celebrations
+          are once-in-a-lifetime moments.
+        </p>
+        <p class="section-body">
+          We're proud to be FSSAI certified and operate our kitchen with commercial-grade hygiene standards, so you can
+          order with complete confidence.
+        </p>
+      </div>
+      <img src="fresh-flowers.jpeg" alt="Our signature fresh flower cake" class="story-img reveal-left">
+    </div>
+  </section>
+
+  <!-- MILESTONES -->
+  <div class="milestones">
+    <div class="milestones-inner">
+      <div>
+        <div class="milestone-num">500+</div>
+        <div class="milestone-label">Happy Customers</div>
+      </div>
+      <div>
+        <div class="milestone-num">1000+</div>
+        <div class="milestone-label">Cakes Delivered</div>
+      </div>
+      <div>
+        <div class="milestone-num">4.9★</div>
+        <div class="milestone-label">Average Rating</div>
+      </div>
+      <div>
+        <div class="milestone-num">3+</div>
+        <div class="milestone-label">Years of Baking</div>
+      </div>
+      <div>
+        <div class="milestone-num">FSSAI</div>
+        <div class="milestone-label">Certified Kitchen</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VALUES -->
+  <div class="promise-wrap">
+    <div class="content-section" style="padding-top:0;padding-bottom:0;">
+      <div style="text-align:center;">
+        <p class="tag-line">What We Stand For</p>
+        <h2 class="section-heading">Our Promises to You</h2>
+        <p class="section-body" style="margin:0 auto 0;max-width:560px;">Everything we do is guided by four core
+          principles that shape every single cake we bake.</p>
+      </div>
+      <div class="values-grid" data-stagger>
+        <div class="value-card">
+          <div class="value-icon">🧼</div>
+          <h3>Hygiene First</h3>
+          <p>Our kitchen follows FSSAI food safety standards with regular sanitation, clean ingredients, and hygienic
+            packaging at every step.</p>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">🌿</div>
+          <h3>Real Ingredients</h3>
+          <p>No artificial preservatives, no shortcuts. We use fresh dairy, real butter, and quality chocolate in every
+            recipe we make.</p>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">🎨</div>
+          <h3>Custom Designs</h3>
+          <p>Every cake is a canvas. We work closely with you to create a design that perfectly matches your vision and
+            occasion.</p>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">❤️</div>
+          <h3>Baked with Love</h3>
+          <p>We genuinely care about making your day special. That love shows in the flavour, the finish, and the care
+            of every delivery.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GALLERY MOSAIC -->
+  <section class="content-section">
+    <div style="text-align:center;">
+      <p class="tag-line">Our Work</p>
+      <h2 class="section-heading">A Peek into Our Kitchen</h2>
+    </div>
+    <div class="img-mosaic">
+      <img src="layer-cakes.jpeg" alt="Layer Cake">
+      <img src="star-map.jpeg" alt="Constellation Cake">
+      <img src="jar-cakes.jpeg" alt="Jar Cakes">
+      <img src="mango-season.jpeg" alt="Mango Special">
+      <img src="fudgy-brownies.jpeg" alt="Fudgy Brownies">
+    </div>
+    <div style="text-align:center;margin-top:40px;">
+      <a href="gallery.html" class="cta-primary">View Full Gallery →</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <h3>Elegance Bakes</h3>
+        <p>Handcrafted homemade desserts baked fresh with love for every celebration in Mumbai.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="menu.html">Menu</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="about.html">About Us</a></li>
+        </ul>
+      </div>
+      <div class="footer-contact">
+        <h4>Get in Touch</h4>
+        <p>📞 +91 7715972816</p>
+        <p>📧 elegancebakes@email.com</p>
+        <p>📍 Mumbai, Maharashtra</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Elegance Bakes. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- AUTH MODAL -->
+  <div id="authModal" class="auth-modal">
+    <div class="auth-modal-inner">
+      <button class="close-btn-modal" onclick="closeAuth()">×</button>
+      <h2 style="font-family:'Playfair Display';color:#d4a574;margin-bottom:4px;">Login</h2>
+      <form id="aboutLoginForm">
+        <div class="input-box"><input type="email" id="aboutEmail" placeholder="Email Address" required></div>
+        <div class="input-box"><input type="password" id="aboutPassword" placeholder="Password" required></div>
+        <p id="aboutLoginError" style="color:#c0392b;font-size:13px;display:none;"></p>
+        <button type="submit" class="btn">Login</button>
+      </form>
+      <p style="text-align:center;margin-top:14px;font-size:14px;color:#8b735f;">No account? <a href="register.html"
+          style="color:#d4a574;font-weight:600;">Register here</a></p>
+    </div>
+  </div>
+
+  <script src="js/reveal.js"></script>
+  <script>
+    window.openAuth = () => { document.getElementById('authModal').classList.add('active'); document.body.style.overflow = 'hidden'; };
+    window.closeAuth = () => { document.getElementById('authModal').classList.remove('active'); document.body.style.overflow = 'auto'; };
+    document.getElementById('aboutLoginForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const email = document.getElementById('aboutEmail').value.trim();
+      const password = document.getElementById('aboutPassword').value;
+      const errEl = document.getElementById('aboutLoginError');
+      errEl.style.display = 'none';
+      try {
+        const res = await fetch('api/login.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password }) });
+        const data = await res.json();
+        if (data.status === 'success') { localStorage.setItem('userName', data.user_name || email.split('@')[0]); closeAuth(); showToast('👋 Welcome back, ' + (data.user_name || 'friend') + '!', 'success'); }
+        else { errEl.textContent = '❌ ' + data.message; errEl.style.display = 'block'; }
+      } catch { errEl.textContent = '❌ Network error.'; errEl.style.display = 'block'; }
+    });
+  </script>
+</body>
+
+</html>

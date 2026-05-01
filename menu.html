@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Menu — Elegance Bakes</title>
+  <meta name="description"
+    content="Browse Elegance Bakes' full menu of handcrafted cakes, jar desserts, cookies and brownies. Made fresh to order in Mumbai.">
+  <link rel="icon" href="logo.png" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600;700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="js/auth.js"></script>
+  <script src="js/loader.js"></script>
+  <script src="js/toast.js"></script>
+  <script src="js/scroll-reveal.js"></script>
+  <script src="js/header-auth.js"></script>
+
+  <style>
+    /* ── SHARED ── */
+    .tag-line {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #a0724a;
+      margin-bottom: 10px;
+    }
+
+    .section-heading {
+      font-family: 'Great Vibes', cursive !important;
+      font-size: clamp(2.4rem, 6vw, 3.8rem) !important;
+      color: #6a3c3c !important;
+      margin: 0 0 14px;
+      line-height: 1.15;
+    }
+
+    .section-intro {
+      font-size: 16px;
+      color: #8b5b5b;
+      max-width: 600px;
+      margin: 0 auto 48px;
+      line-height: 1.8;
+      text-align: center;
+    }
+
+    /* ── HERO ── */
+    .menu-hero {
+      background: linear-gradient(160deg, #f8e8d9 0%, #f5ecea 60%, #fdf6f0 100%);
+      padding: 100px 24px 50px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .menu-hero::after {
+      content: '🍰';
+      position: absolute;
+      font-size: 16rem;
+      opacity: 0.04;
+      right: -20px;
+      bottom: -30px;
+      pointer-events: none;
+    }
+
+    .menu-hero h1 {
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(3rem, 8vw, 6rem);
+      color: #6a3c3c;
+      margin: 14px 0 18px;
+      line-height: 1.1;
+    }
+
+    .menu-hero p {
+      font-size: clamp(15px, 2vw, 18px);
+      color: #8b5b5b;
+      max-width: 580px;
+      margin: 0 auto;
+      line-height: 1.85;
+    }
+
+    /* ── INFO BADGES ── */
+    .menu-badges {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding: 32px 24px 0;
+    }
+
+    .menu-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: white;
+      border: 1.5px solid rgba(212, 165, 116, 0.4);
+      color: #6a3c3c;
+      padding: 9px 18px;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: 0 4px 16px rgba(212, 165, 116, 0.1);
+    }
+
+    /* ── SECTION WRAPPER ── */
+    .menu-section {
+      padding: 70px 24px;
+    }
+
+    .menu-section.alt-bg {
+      background: #fff7f4;
+    }
+
+    .menu-section-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    /* ── CAKE GRID ── */
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 28px;
+      margin-top: 10px;
+      text-align: left;
+    }
+
+    .menu-card {
+      background: white;
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: 0 10px 32px rgba(106, 60, 60, 0.1);
+      border: 1px solid rgba(212, 165, 116, 0.15);
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .menu-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 24px 55px rgba(106, 60, 60, 0.18);
+    }
+
+    .card-image {
+      width: 100%;
+      height: 210px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .card-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s ease;
+    }
+
+    .menu-card:hover .card-image img {
+      transform: scale(1.06);
+    }
+
+    .card-details {
+      padding: 22px 20px 24px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .card-details h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      color: #6a3c3c;
+      font-weight: 700;
+      margin: 0 0 4px;
+    }
+
+    .card-price {
+      font-size: 15px;
+      font-weight: 700;
+      color: #a0724a;
+      margin-bottom: 6px;
+    }
+
+    .card-desc {
+      font-size: 13px;
+      color: #9b7a6a;
+      line-height: 1.6;
+      margin-bottom: 16px;
+      flex: 1;
+    }
+
+    /* ── KG SELECTOR ── */
+    .kg-selector {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      width: 100%;
+    }
+
+    .kg-dropdown {
+      flex: 1;
+      padding: 10px 12px;
+      border: 2px solid rgba(106, 60, 60, 0.25);
+      border-radius: 10px;
+      background: white;
+      font-family: 'Playfair Display', serif;
+      font-size: 14px;
+      color: #6a3c3c;
+      cursor: pointer;
+      min-width: 0;
+      box-sizing: border-box;
+    }
+
+    .kg-dropdown:focus {
+      outline: none;
+      border-color: #6a3c3c;
+      box-shadow: 0 0 0 3px rgba(106, 60, 60, 0.08);
+    }
+
+    .menu-card button {
+      background: linear-gradient(135deg, #6a3c3c, #8b5b5b);
+      color: white;
+      border: none;
+      padding: 11px 18px;
+      border-radius: 10px;
+      font-family: 'Playfair Display', serif;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      white-space: nowrap;
+    }
+
+    .menu-card button:hover {
+      background: linear-gradient(135deg, #5a2c2c, #6a3c3c);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(106, 60, 60, 0.4);
+    }
+
+    /* ── TREATS SECTION (fixed qty) ── */
+    .treats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 28px;
+      text-align: left;
+    }
+
+    /* ── CUSTOM ORDER ── */
+    .custom-section-wrap {
+      background: linear-gradient(160deg, #f8e8d9, #fdf6f0);
+      padding: 80px 24px;
+    }
+
+    .custom-section-inner {
+      max-width: 660px;
+      margin: 0 auto;
+    }
+
+    .form-container {
+      background: white;
+      border-radius: 24px;
+      padding: 40px 40px;
+      box-shadow: 0 20px 60px rgba(106, 60, 60, 0.12);
+      border: 1px solid rgba(212, 165, 116, 0.2);
+    }
+
+    .form-container h2 {
+      font-family: 'Great Vibes', cursive !important;
+      font-size: 3rem !important;
+      color: #6a3c3c !important;
+      margin: 0 0 6px !important;
+      text-align: center;
+    }
+
+    .custom-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 28px;
+      text-align: left;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group.full-width {
+      grid-column: span 2;
+    }
+
+    .form-group label {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #6a3c3c;
+      margin-bottom: 7px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      padding: 12px 14px;
+      border: 2px solid rgba(212, 165, 116, 0.5);
+      border-radius: 10px;
+      font-family: 'Playfair Display', serif;
+      font-size: 14px;
+      background: #fdf9f7;
+      color: #4a2c2c;
+      transition: border-color 0.2s;
+      box-sizing: border-box;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #d4a574;
+      box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.15);
+      background: white;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 100px;
+      max-height: 180px;
+    }
+
+    .btn-submit {
+      grid-column: span 2;
+      padding: 15px;
+      background: linear-gradient(135deg, #6a3c3c, #a0724a);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-family: 'Playfair Display', serif;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: all 0.3s;
+      box-shadow: 0 8px 24px rgba(106, 60, 60, 0.3);
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 36px rgba(106, 60, 60, 0.4);
+    }
+
+    /* ── AUTH MODAL ── */
+    .auth-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      z-index: 99999;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .auth-modal.active {
+      display: flex !important;
+    }
+
+    .auth-modal-inner {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      max-width: 450px;
+      width: 90%;
+      max-height: 90vh;
+      overflow: auto;
+      position: relative;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .form-box {
+      display: none;
+    }
+
+    .form-box.active {
+      display: block !important;
+    }
+
+    .input-box {
+      margin: 15px 0;
+    }
+
+    .input-box input {
+      width: 100%;
+      padding: 15px;
+      border: 2px solid #d4a574;
+      border-radius: 8px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 15px;
+      background: #d4a574;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 10px 0;
+      font-family: 'Playfair Display', serif;
+    }
+
+    .close-btn-modal {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      background: none;
+      border: none;
+      font-size: 30px;
+      cursor: pointer;
+      color: #666;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width:900px) {
+      .menu-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width:600px) {
+
+      .menu-grid,
+      .treats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .custom-form {
+        grid-template-columns: 1fr;
+      }
+
+      .form-group.full-width,
+      .btn-submit {
+        grid-column: span 1;
+      }
+
+      .kg-selector {
+        flex-direction: column;
+      }
+
+      .form-container {
+        padding: 28px 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ═══════════ HEADER ═══════════ -->
+  <header>
+    <div class="header-container">
+      <div class="logo">
+        <img src="logo.png" alt="Elegance Bakes" onclick="window.location.href='index.html'">
+      </div>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="menu.html" class="active">Menu</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="about.html">About</a></li>
+        </ul>
+      </nav>
+      <div class="header-icons">
+        <a href="login.html" id="loginIcon" class="header-icon-link" title="Login">
+          <img src="user.png" alt="Login">
+        </a>
+        <div id="userMenu" class="user-menu-wrap">
+          <div id="userInitial" class="user-avatar" onclick="window.location.href='dashboard.html'" title="Dashboard">U
+          </div>
+          <button class="logout-btn" onclick="logoutHeader()" title="Logout">🚪</button>
+        </div>
+        <a href="cart.html" class="header-icon-link" title="Cart">
+          <img src="cart.png" alt="Cart">
+        </a>
+        <a href="https://www.instagram.com/elegance_bakes" target="_blank" class="header-icon-link" title="Instagram">
+          <img src="instagram.png" alt="Instagram">
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══════════ HERO ═══════════ -->
+  <section class="menu-hero">
+    <span
+      style="display:inline-block;background:rgba(212,165,116,.15);color:#a0724a;border:1px solid rgba(212,165,116,.4);padding:8px 22px;border-radius:30px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;">Fresh
+      · Made to Order · No Preservatives</span>
+    <h1>Our Full Menu</h1>
+    <p>Every item is baked fresh to order — nothing sits on a shelf. Browse our signature cakes andhandcrafted treats,
+      pick your size, and place your order in seconds.</p>
+  </section>
+
+
+  <!-- INFO BADGES -->
+  <div class="menu-badges">
+    <span class="menu-badge">🗓️ 48-hr advance notice required</span>
+    <span class="menu-badge">📦 Delivery within pincodes 421201–421405</span>
+    <span class="menu-badge">💳 Payment via UPI/QR at checkout</span>
+    <span class="menu-badge">🔪 Serves ~10–12 per kg</span>
+  </div>
+
+  <!-- ═══════════ SIGNATURE CAKES ═══════════ -->
+  <section class="menu-section first-section">
+    <div class="menu-section-inner">
+      <p class="tag-line">Signature Collection</p>
+      <h2 class="section-heading">Cakes Made to Remember</h2>
+      <p class="section-intro">Each cake is baked from scratch, filled with fresh cream and real ingredients, and
+        decorated by hand. Select your weight, then add to cart.</p>
+
+      <div class="menu-grid" data-stagger>
+ <!-- ── TEST PRODUCT — remove before going live ── -->
+        <div class="menu-card" style="border:2px dashed #e74c3c;position:relative;">
+          <div
+            style="position:absolute;top:12px;left:12px;background:#e74c3c;color:white;font-size:11px;font-weight:700;letter-spacing:1px;padding:4px 10px;border-radius:20px;z-index:1;">
+            TEST ONLY</div>
+          <div class="card-image"><img src="default-image.png" alt="Test Product" /></div>
+          <div class="card-details">
+            <h3>Test Payment Item</h3>
+            <p class="card-price">₹1 · For testing only</p>
+            <p class="card-desc">Use this item to test the payment and order flow. Do not use for real orders. Delete
+              this card when done testing.</p>
+            <button onclick="addToCart('Test Payment Item', 1, 'default-image.png')">Add to Cart</button>
+          </div>
+        </div>
+        <!-- ── END TEST PRODUCT ── -->
+
+        <div class="menu-card">
+          <div class="card-image"><img src="layer-cakes.jpeg" alt="Layer Cakes" /></div>
+          <div class="card-details">
+            <h3>Layer Cakes</h3>
+            <p class="card-price">From ₹450 · ₹900/kg</p>
+            <p class="card-desc">Classic multi-layer sponge with fresh cream frosting. Choose vanilla, chocolate, or red
+              velvet. Perfect for any celebration.</p>
+            <div class="kg-selector">
+              <select class="kg-dropdown">
+                <option value="0.5">½ kg — ₹450</option>
+                <option value="1" selected>1 kg — ₹900</option>
+                <option value="1.5">1½ kg — ₹1350</option>
+                <option value="2">2 kg — ₹1800</option>
+              </select>
+              <button onclick="addToCart('Layer Cakes', 900, 'layer-cakes.jpeg')">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-card">
+          <div class="card-image"><img src="fresh-flowers.jpeg" alt="Fresh Flower Cake" /></div>
+          <div class="card-details">
+            <h3>Fresh Flower Cake</h3>
+            <p class="card-price">From ₹600 · ₹1200/kg</p>
+            <p class="card-desc">Real edible and non-toxic flowers arranged by hand for a breathtaking, garden-fresh
+              design. A showstopper at any event.</p>
+            <div class="kg-selector">
+              <select class="kg-dropdown">
+                <option value="0.5">½ kg — ₹600</option>
+                <option value="1" selected>1 kg — ₹1200</option>
+                <option value="1.5">1½ kg — ₹1800</option>
+                <option value="2">2 kg — ₹2400</option>
+              </select>
+              <button onclick="addToCart('Fresh Flower Cake', 1200, 'fresh-flowers.jpeg')">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-card">
+          <div class="card-image"><img src="star-map.jpeg" alt="Constellation Cake" /></div>
+          <div class="card-details">
+            <h3>Constellation Cake</h3>
+            <p class="card-price">From ₹750 · ₹1500/kg</p>
+            <p class="card-desc">A dark, galaxy-inspired creation with edible star maps and gold dust. Perfect for
+              astronomy lovers or a magical birthday.</p>
+            <div class="kg-selector">
+              <select class="kg-dropdown">
+                <option value="0.5">½ kg — ₹750</option>
+                <option value="1" selected>1 kg — ₹1500</option>
+                <option value="1.5">1½ kg — ₹2250</option>
+                <option value="2">2 kg — ₹3000</option>
+              </select>
+              <button onclick="addToCart('Constellation Cake', 1500, 'constellation-cake.jpeg')">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-card">
+          <div class="card-image"><img src="heart-cake.jpeg" alt="Vintage Heart Cake" /></div>
+          <div class="card-details">
+            <h3>Vintage Heart Cake</h3>
+            <p class="card-price">From ₹550 · ₹1100/kg</p>
+            <p class="card-desc">A romantic heart-shaped cake with vintage buttercream piping — timeless, elegant, and
+              deeply personal. Ideal for anniversaries.</p>
+            <div class="kg-selector">
+              <select class="kg-dropdown">
+                <option value="0.5">½ kg — ₹550</option>
+                <option value="1" selected>1 kg — ₹1100</option>
+                <option value="1.5">1½ kg — ₹1650</option>
+                <option value="2">2 kg — ₹2200</option>
+              </select>
+              <button onclick="addToCart('Vintage Heart Cake', 1100, 'heart-cake.jpeg')">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-card">
+          <div class="card-image"><img src="star-shape.jpeg" alt="Star Cake" /></div>
+          <div class="card-details">
+            <h3>Star Shape Cake</h3>
+            <p class="card-price">From ₹550 · ₹1100/kg</p>
+            <p class="card-desc">A fun geometric star-shaped cake with colorful fondant accents. Makes a stunning
+              centrepiece for any party spread.</p>
+            <div class="kg-selector">
+              <select class="kg-dropdown">
+                <option value="0.5">½ kg — ₹550</option>
+                <option value="1" selected>1 kg — ₹1100</option>
+                <option value="1.5">1½ kg — ₹1650</option>
+                <option value="2">2 kg — ₹2200</option>
+              </select>
+              <button onclick="addToCart('Star Cake', 1100, 'star-cake.jpeg')">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-card">
+          <div class="card-image"><img src="polaroids.jpeg" alt="Polaroid Hanging Cake" /></div>
+          <div class="card-details">
+            <h3>Polaroid Hanging Cake</h3>
+            <p class="card-price">From ₹900 · ₹1800/kg</p>
+            <p class="card-desc">Your favourite photos printed on edible paper and hung as polaroids off the cake — a
+              truly unique memory keepsake.</p>
+            <div class="kg-selector">
+              <select class="kg-dropdown">
+                <option value="0.5">½ kg — ₹900</option>
+                <option value="1" selected>1 kg — ₹1800</option>
+                <option value="1.5">1½ kg — ₹2700</option>
+                <option value="2">2 kg — ₹3600</option>
+              </select>
+              <button onclick="addToCart('Polaroid Hanging Cake', 1800, 'polaroid-cake.jpeg')">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-card">
+          <div class="card-image"><img src="mango-season.jpeg" alt="Mango Special" /></div>
+          <div class="card-details">
+            <h3>Mango Special</h3>
+            <p class="card-price">From ₹500 · ₹1000/kg · 🌿 Seasonal</p>
+            <p class="card-desc">Made with fresh Alphonso mangoes — available only in summer. Light mango cream layers
+              with real mango pulp filling.</p>
+            <div class="kg-selector">
+              <select class="kg-dropdown">
+                <option value="0.5">½ kg — ₹500</option>
+                <option value="1" selected>1 kg — ₹1000</option>
+                <option value="1.5">1½ kg — ₹1500</option>
+                <option value="2">2 kg — ₹2000</option>
+              </select>
+              <button onclick="addToCart('Mango Special', 1000, 'mango-season.jpeg')">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ TREATS & DELIGHTS ═══════════ -->
+  <section class="menu-section alt-bg">
+    <div class="menu-section-inner">
+      <p class="tag-line">Treats & Delights</p>
+      <h2 class="section-heading">Little Joys, Big Flavour</h2>
+      <p class="section-intro">Perfect for gifting, party favours, or just treating yourself. All items made fresh in
+        small batches with no artificial additives.</p>
+
+      <div class="treats-grid" data-stagger>
+
+        <div class="menu-card">
+          <div class="card-image"><img src="jar-cakes.jpeg" alt="Jar Cakes" /></div>
+          <div class="card-details">
+            <h3>Dessert Jar Cakes</h3>
+            <p class="card-price">₹150 per jar</p>
+            <p class="card-desc">Layered mini cakes in glass jars — ideal for gifting sets or party favours. Available
+              in chocolate and vanilla.</p>
+            <button onclick="addToCart('Jar Cake', 150, 'jar-cakes.jpeg')">Add to Cart</button>
+          </div>
+        </div>
+
+        <div class="menu-card">
+          <div class="card-image"><img src="fresh-cookies.jpeg" alt="Cookies" /></div>
+          <div class="card-details">
+            <h3>Cookies Box</h3>
+            <p class="card-price">₹200 · Box of 10</p>
+            <p class="card-desc">Freshly baked choco chip and butter cookies. Crisp edges, soft centre. Minimum order 10
+              pieces per box.</p>
+            <button onclick="addToCart('Cookies Box (10 pcs)', 200, 'fresh-cookies.jpeg')">Add Box of 10</button>
+          </div>
+        </div>
+
+        <div class="menu-card">
+          <div class="card-image"><img src="fudgy-brownies.jpeg" alt="Brownies" /></div>
+          <div class="card-details">
+            <h3>Fudgy Brownies</h3>
+            <p class="card-price">₹250 · Box of 5 · (₹50/pc)</p>
+            <p class="card-desc">Ultra-moist dark chocolate brownies with a dense, fudgy centre. No cakey brownies here
+              — this is the real thing.</p>
+            <button onclick="addToCart('Fudgy Brownies (5 pcs)', 250, 'fudgy-brownies.jpeg')">Add Box of 5</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ CUSTOM ORDER ═══════════ -->
+  <div class="custom-section-wrap">
+    <div class="custom-section-inner">
+      <div style="text-align:center;margin-bottom:36px;">
+        <p class="tag-line">Can't Find What You Want?</p>
+        <h2 class="section-heading">Design Your Dream Cake</h2>
+        <p style="font-size:16px;color:#8b5b5b;line-height:1.8;max-width:520px;margin:0 auto;">
+          Describe your vision and we'll bring it to life — custom flavours, shapes, sizes, and designs. We'll discuss
+          everything via WhatsApp before baking.
+        </p>
+      </div>
+      <div class="form-container">
+        <h2>Custom Order Request</h2>
+        <p style="text-align:center;font-size:14px;color:#b09080;margin:0 0 4px;">Fill this form and we'll WhatsApp you
+          back with a quote</p>
+        <form class="custom-form" onsubmit="sendToWhatsApp(event)">
+          <div class="form-group">
+            <label for="flavor">Flavour</label>
+            <select id="flavor" name="flavor" required>
+              <option value="" disabled selected>Select a flavour</option>
+              <option value="Belgian Chocolate">Belgian Chocolate</option>
+              <option value="Classic Vanilla">Classic Vanilla</option>
+              <option value="Red Velvet">Red Velvet</option>
+              <option value="Fresh Fruit">Fresh Fruit</option>
+              <option value="Mango">Mango (Seasonal)</option>
+              <option value="Other">Other — specify in notes</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="weight">Weight (kg)</label>
+            <input type="number" id="weight" name="weight" min="0.5" max="5" step="0.5" placeholder="e.g. 1.5 (max 5kg)"
+              required />
+          </div>
+          <div class="form-group">
+            <label for="occasion">Occasion</label>
+            <input type="text" id="occasion" name="occasion" placeholder="Birthday, Anniversary, etc." />
+          </div>
+          <div class="form-group">
+            <label for="color">Theme / Colour</label>
+            <input type="text" id="color" name="color" placeholder="e.g. Pastel Pink & Gold" />
+          </div>
+          <div class="form-group full-width">
+            <label for="message">Additional Details</label>
+            <textarea id="message" name="message" rows="4" maxlength="500"
+              placeholder="Specific design, allergens, message on cake, reference photo link…"></textarea>
+          </div>
+          <button type="submit" class="btn-submit">💬 Send via WhatsApp</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ FOOTER ═══════════ -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <h3>Elegance Bakes</h3>
+        <p>Handcrafted homemade desserts baked fresh with love for every celebration in Mumbai.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="menu.html">Menu</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="about.html">About Us</a></li>
+        </ul>
+      </div>
+      <div class="footer-contact">
+        <h4>Get in Touch</h4>
+        <p>📞 +91 7715972816</p>
+        <p>📧 elegancebakes@email.com</p>
+        <p>📍 Mumbai, Maharashtra</p>
+        <p style="margin-top:12px;"><a href="https://www.instagram.com/elegance_bakes" target="_blank"
+            style="color:#d4a574;font-weight:600;text-decoration:none;">@elegance_bakes on Instagram ↗</a></p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Elegance Bakes. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- ═══════════ AUTH MODAL ═══════════ -->
+  <div class="auth-modal" id="authModal">
+    <div class="auth-modal-inner">
+      <button class="close-btn-modal" onclick="closeAuth()">×</button>
+      <div class="form-box login active" id="loginBox">
+        <h2 style="font-family:'Playfair Display';color:#d4a574;font-size:1.6rem;margin-bottom:6px;">Login</h2>
+        <form id="loginForm">
+          <div class="input-box"><input type="email" id="loginEmail" placeholder="Email Address" required></div>
+          <div class="input-box"><input type="password" id="loginPassword" placeholder="Password" required></div>
+          <p id="loginError" style="color:#c0392b;font-size:13px;display:none;margin-top:-8px;"></p>
+          <button class="btn" type="submit">Login</button>
+        </form>
+        <p style="text-align:center;font-size:13px;color:#8b735f;margin-top:10px;">New here? <a href="register.html"
+            style="color:#d4a574;font-weight:700;">Create account</a></p>
+        <p style="text-align:center;font-size:13px;margin-top:6px;"><a href="forgot-password.html"
+            style="color:#b09080;">Forgot password?</a></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ── CART ──
+    function addToCart(name, basePricePerKg, imageName) {
+      if (!localStorage.getItem('userName')) {
+        showToast('⚠️ Please login first to add items!', 'warning');
+        openAuth();
+        return;
+      }
+      const button = event.target;
+      let selectedKg = 1;
+      const kgDropdown = button.closest('.card-details')?.querySelector('.kg-dropdown');
+      if (kgDropdown) selectedKg = parseFloat(kgDropdown.value) || 1;
+
+      const totalPrice = Math.round(basePricePerKg * selectedKg);
+      if (totalPrice <= 0) { showToast('❌ Error adding item.', 'error'); return; }
+
+      let cart = JSON.parse(localStorage.getItem('bakeryCart')) || [];
+      const id = name.toLowerCase().replace(/[^a-z0-9]/g, '-') + (selectedKg !== 1 ? `-${selectedKg}kg` : '');
+      const existing = cart.find(i => i.id === id);
+      if (existing) { existing.qty += 1; }
+      else { cart.push({ id, name: `${name} (${selectedKg}kg)`, price: totalPrice, qty: 1, image: imageName, kg: selectedKg }); }
+      localStorage.setItem('bakeryCart', JSON.stringify(cart));
+      showToast(`✅ ${name} ${selectedKg}kg added! — ₹${totalPrice.toLocaleString()}`, 'success');
+    }
+
+    // ── AUTH ──
+    function openAuth() { document.getElementById('authModal').classList.add('active'); document.body.style.overflow = 'hidden'; }
+    function closeAuth() { document.getElementById('authModal').classList.remove('active'); document.body.style.overflow = 'auto'; }
+    function goToDashboard() { window.location.href = 'dashboard.html'; }
+    function logoutHeader() {
+      localStorage.removeItem('userName');
+      document.getElementById('userMenu').style.display = 'none';
+      document.getElementById('loginIcon').style.display = 'block';
+      showToast('Logged out.', 'info');
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const savedName = localStorage.getItem('userName');
+      if (savedName) {
+        document.getElementById('userNameHeader').textContent = `👤 ${savedName}`;
+        document.getElementById('userMenu').style.display = 'flex';
+        document.getElementById('loginIcon').style.display = 'none';
+      }
+      document.getElementById('loginForm')?.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+        const errEl = document.getElementById('loginError');
+        errEl.style.display = 'none';
+        try {
+          const res = await fetch('api/login.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password }) });
+          const data = await res.json();
+          if (data.status === 'success') {
+            localStorage.setItem('userName', data.user_name || email.split('@')[0]);
+            closeAuth(); location.reload();
+          } else { errEl.textContent = '❌ ' + data.message; errEl.style.display = 'block'; }
+        } catch { errEl.textContent = '❌ Network error.'; errEl.style.display = 'block'; }
+      });
+    });
+
+    // ── WHATSAPP CUSTOM ORDER ──
+    function sendToWhatsApp(event) {
+      event.preventDefault();
+      const flavor = document.getElementById('flavor').value;
+      const weight = document.getElementById('weight').value;
+      const occasion = document.getElementById('occasion').value || 'Not specified';
+      const color = document.getElementById('color').value || 'Not specified';
+      const message = document.getElementById('message').value || 'No additional details';
+      const text = `Hello Elegance Bakes! 🍰\n\nI'd like to place a *custom cake order*:\n\n🎂 Flavour: ${flavor}\n⚖️ Weight: ${weight} kg\n🎉 Occasion: ${occasion}\n🎨 Theme / Colour: ${color}\n📝 Details: ${message}\n\nPlease let me know the price and availability.`;
+      window.open('https://wa.me/917715972816?text=' + encodeURIComponent(text), '_blank');
+    }
+  </script>
+</body>
+
+</html>

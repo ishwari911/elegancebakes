@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Elegance Bakes — Handcrafted Cakes & Desserts, Mumbai</title>
+  <meta name="description"
+    content="Elegance Bakes is a Mumbai-based home bakery crafting beautiful, hygienic, made-to-order cakes and desserts for every occasion.">
+  <link rel="icon" href="logo.png">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="js/auth.js"></script>
+  <script src="js/loader.js"></script>
+  <script src="js/toast.js"></script>
+  <script src="js/scroll-reveal.js"></script>
+  <script src="js/header-auth.js"></script>
+  <style>
+    /* ── AUTH MODAL ── */
+    .auth-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.8);
+      display: none !important;
+      z-index: 99999;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .auth-modal.active {
+      display: flex !important;
+    }
+
+    .auth-modal-inner {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      max-width: 450px;
+      width: 90%;
+      position: relative;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .form-container {
+      display: none;
+    }
+
+    .form-container.active {
+      display: block !important;
+    }
+
+    .input-box {
+      margin: 15px 0;
+    }
+
+    .input-box input {
+      width: 100%;
+      padding: 15px;
+      border: 2px solid #d4a574;
+      border-radius: 8px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 15px;
+      background: #d4a574;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 10px 0;
+    }
+
+    .close-btn-modal {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      background: none;
+      border: none;
+      font-size: 30px;
+      cursor: pointer;
+      color: #666;
+    }
+
+    .switch-link {
+      color: #d4a574;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 88vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 70px 24px 80px;
+      background: #f5ecea;
+    }
+
+    .hero h1 {
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(3.2rem, 10vw, 7rem);
+      color: #6a3c3c;
+      line-height: 1.1;
+      margin: 0 0 22px;
+      letter-spacing: 0.5px;
+    }
+
+    .hero-sub {
+      font-size: clamp(15px, 2vw, 18px);
+      color: #8b5b5b;
+      max-width: 520px;
+      margin: 0 auto 48px;
+      line-height: 1.9;
+      font-weight: 400;
+    }
+
+    .hero-ctas {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .cta-primary {
+      background: #6a3c3c;
+      color: white;
+      padding: 15px 40px;
+      border-radius: 50px;
+      font-family: 'Playfair Display', serif;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s;
+      letter-spacing: 0.3px;
+    }
+
+    .cta-primary:hover {
+      background: #8b5b5b;
+      transform: translateY(-2px);
+      box-shadow: 0 14px 36px rgba(106, 60, 60, 0.35);
+      color: white;
+    }
+
+    .cta-outline {
+      background: transparent;
+      color: #6a3c3c;
+      padding: 14px 38px;
+      border-radius: 50px;
+      font-family: 'Playfair Display', serif;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      border: 1.5px solid rgba(106, 60, 60, 0.35);
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .cta-outline:hover {
+      border-color: #6a3c3c;
+      background: rgba(106, 60, 60, 0.06);
+      color: #6a3c3c;
+      transform: translateY(-2px);
+    }
+
+    /* ── TRUST STRIP ── */
+    .trust-strip {
+      display: flex;
+      justify-content: center;
+      gap: clamp(24px, 5vw, 80px);
+      flex-wrap: wrap;
+      padding: 48px 24px;
+      background: #d9c7bd;
+    }
+
+    .trust-item {
+      text-align: center;
+    }
+
+    .trust-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: #6a3c3c;
+      display: block;
+    }
+
+    .trust-label {
+      font-size: 13px;
+      color: #5b3a3a;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+    }
+
+    /* ── SECTION SHARED ── */
+    .content-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 80px 24px;
+    }
+
+    .tag-line {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #a0724a;
+      margin-bottom: 12px;
+    }
+
+    .section-heading {
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      color: #6a3c3c;
+      margin: 0 0 16px;
+      line-height: 1.15;
+    }
+
+    .section-body {
+      font-size: 17px;
+      color: #8b5b5b;
+      max-width: 620px;
+      line-height: 1.8;
+      margin-bottom: 40px;
+    }
+
+    /* ── STORY ── */
+    .story-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .story-img-wrap {
+      position: relative;
+    }
+
+    .story-img-main {
+      width: 100%;
+      height: 420px;
+      object-fit: cover;
+      border-radius: 28px;
+      box-shadow: 0 30px 70px rgba(106, 60, 60, 0.2);
+    }
+
+    .story-img-accent {
+      position: absolute;
+      bottom: -24px;
+      right: -24px;
+      width: 48%;
+      height: 48%;
+      object-fit: cover;
+      border-radius: 20px;
+      border: 4px solid #f5ecea;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
+    }
+
+    /* ── PRODUCTS ── */
+    .products-wrap {
+      background: #fff7f4;
+      padding: 80px 0;
+    }
+
+    .product-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 32px;
+      margin-top: 48px;
+    }
+
+    .product-card {
+      background: white;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 12px 36px rgba(106, 60, 60, 0.1);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .product-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 28px 60px rgba(106, 60, 60, 0.2);
+    }
+
+    .product-image {
+      width: 100%;
+      height: 240px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .product-card-body {
+      padding: 22px 24px;
+    }
+
+    .product-card-body h3 {
+      font-size: 20px;
+      color: #6a3c3c;
+      font-weight: 600;
+      margin: 0 0 6px;
+    }
+
+    .product-card-body p {
+      font-size: 14px;
+      color: #a0724a;
+      margin: 0;
+    }
+
+    /* ── PROCESS ── */
+    .process-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 32px;
+      margin-top: 48px;
+      counter-reset: step;
+    }
+
+    .process-card {
+      background: white;
+      border-radius: 22px;
+      padding: 32px 24px;
+      box-shadow: 0 10px 32px rgba(212, 165, 116, 0.13);
+      border: 1px solid rgba(212, 165, 116, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .process-card::before {
+      counter-increment: step;
+      content: "0" counter(step);
+      position: absolute;
+      top: 16px;
+      right: 18px;
+      font-size: 3.5rem;
+      font-weight: 700;
+      color: rgba(212, 165, 116, 0.15);
+      font-family: 'Playfair Display', serif;
+      line-height: 1;
+    }
+
+    .process-icon {
+      font-size: 2.2rem;
+      margin-bottom: 16px;
+    }
+
+    .process-card h3 {
+      font-size: 18px;
+      color: #6a3c3c;
+      font-weight: 700;
+      margin: 0 0 8px;
+    }
+
+    .process-card p {
+      font-size: 14px;
+      color: #8b5b5b;
+      line-height: 1.7;
+      margin: 0;
+    }
+
+    /* ── REVIEWS ── */
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 28px;
+      margin-top: 48px;
+    }
+
+    .review-card {
+      background: white;
+      border-radius: 22px;
+      padding: 32px 28px;
+      box-shadow: 0 10px 32px rgba(212, 165, 116, 0.13);
+      border: 1px solid rgba(212, 165, 116, 0.15);
+      position: relative;
+    }
+
+    .review-quote {
+      font-size: 4rem;
+      color: rgba(212, 165, 116, 0.3);
+      font-family: Georgia, serif;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .review-text {
+      font-size: 16px;
+      color: #5b3a3a;
+      line-height: 1.75;
+      font-style: italic;
+      margin-bottom: 20px;
+    }
+
+    .review-stars {
+      color: #d4a574;
+      font-size: 17px;
+      margin-bottom: 10px;
+    }
+
+    .review-author {
+      font-weight: 700;
+      color: #6a3c3c;
+      font-size: 15px;
+    }
+
+    .review-location {
+      font-size: 13px;
+      color: #b09080;
+    }
+
+    /* ── FINALE CTA ── */
+    .finale-cta {
+      background: linear-gradient(135deg, #6a3c3c 0%, #a0724a 100%);
+      padding: 90px 24px;
+      text-align: center;
+    }
+
+    .finale-cta h2 {
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(2.8rem, 7vw, 5rem);
+      color: white;
+      margin: 0 0 18px;
+    }
+
+    .finale-cta p {
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 18px;
+      margin: 0 0 36px;
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .cta-white {
+      background: white;
+      color: #6a3c3c;
+      padding: 16px 44px;
+      border-radius: 50px;
+      font-family: 'Playfair Display', serif;
+      font-size: 16px;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.3s;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .cta-white:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.3);
+      color: #6a3c3c;
+    }
+
+    .icons {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .icon-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      transition: transform 0.2s ease;
+    }
+
+    .icon-btn:hover {
+      transform: scale(1.15);
+    }
+
+    #userMenu {
+      display: none;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6a3c3c, #a0724a);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Playfair Display', serif;
+      flex-shrink: 0;
+      transition: transform 0.2s;
+    }
+
+    .user-avatar:hover {
+      transform: scale(1.1);
+    }
+
+    .logout-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 17px;
+      opacity: 0.7;
+      transition: opacity 0.2s, transform 0.2s;
+      padding: 0;
+    }
+
+    .logout-btn:hover {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .story-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .story-img-accent {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="header-container">
+      <div class="logo">
+        <img src="logo.png" alt="Elegance Bakes" onclick="window.location.href='index.html'">
+      </div>
+      <nav>
+        <ul>
+          <li><a href="index.html" class="active">Home</a></li>
+          <li><a href="menu.html">Menu</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="about.html">About</a></li>
+        </ul>
+      </nav>
+      <div class="header-icons">
+        <a href="login.html" id="loginIcon" class="header-icon-link" title="Login">
+          <img src="user.png" alt="Login">
+        </a>
+        <div id="userMenu" class="user-menu-wrap">
+          <div id="userInitial" class="user-avatar" onclick="window.location.href='dashboard.html'" title="Dashboard">U
+          </div>
+          <button class="logout-btn" onclick="logoutHeader()" title="Logout">🚪</button>
+        </div>
+        <a href="cart.html" class="header-icon-link" title="Cart">
+          <img src="cart.png" alt="Cart">
+        </a>
+        <a href="https://www.instagram.com/elegance_bakes" target="_blank" class="header-icon-link" title="Instagram">
+          <img src="instagram.png" alt="Instagram">
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══════════ HERO ═══════════ -->
+  <section class="hero">
+    <h1>Baked with Love</h1>
+    <p class="hero-sub">
+      Handcrafted cakes &amp; desserts made fresh to order in Mumbai.<br>
+      No preservatives. No shortcuts. Just pure joy in every bite.
+    </p>
+    <div class="hero-ctas">
+      <a href="menu.html" class="cta-primary">🍰 Order a Cake</a>
+      <a href="gallery.html" class="cta-outline">View Our Work</a>
+    </div>
+  </section>
+
+
+
+  <!-- ═══════════ TRUST STRIP ═══════════ -->
+  <div class="trust-strip">
+    <div class="trust-item reveal-fade"><span class="trust-num">500+</span><span class="trust-label">Orders
+        Delivered</span></div>
+    <div class="trust-item reveal-fade" data-delay="80"><span class="trust-num">4.9★</span><span
+        class="trust-label">Customer Rating</span></div>
+    <div class="trust-item reveal-fade" data-delay="160"><span class="trust-num">100%</span><span
+        class="trust-label">Hygienic Kitchen</span></div>
+    <div class="trust-item reveal-fade" data-delay="240"><span class="trust-num">FSSAI</span><span
+        class="trust-label">Certified</span></div>
+  </div>
+
+  <!-- ═══════════ OUR STORY ═══════════ -->
+  <section class="content-section">
+    <div class="story-grid">
+      <div class="story-img-wrap reveal-left">
+        <img src="fudgy-brownies.jpeg" alt="Freshly baked brownies" class="story-img-main">
+        <img src="polaroids.jpeg" alt="Custom polaroid cake" class="story-img-accent">
+      </div>
+      <div class="reveal-right">
+        <p class="tag-line">Our Story</p>
+        <h2 class="section-heading">Born from a Passion for Baking</h2>
+        <p class="section-body">
+          Elegance Bakes started with one simple idea — everyone deserves a cake that feels personal.
+          What began as a hobby in a home kitchen has grown into Mumbai's most loved small-batch bakery,
+          one carefully crafted cake at a time.
+        </p>
+        <p class="section-body" style="margin-bottom:36px;">We use only fresh, quality ingredients — no artificial
+          preservatives, no shortcuts.</p>
+        <a href="about.html" class="cta-outline">Read Our Story →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ PRODUCTS ═══════════ -->
+  <div class="products-wrap">
+    <div class="content-section" style="padding-top:0;padding-bottom:0;">
+      <div style="text-align:center;">
+        <p class="tag-line">What We Make</p>
+        <h2 class="section-heading">Our Signature Collections</h2>
+        <p class="section-body" style="margin:0 auto 0;">
+          From towering layer cakes to delicate jar desserts — every item is made fresh and delivered with care.
+        </p>
+      </div>
+      <div data-stagger class="product-cards-grid">
+        <a href="menu.html" class="product-card">
+          <img src="layer-cakes.jpeg" class="product-image" alt="Layer Cakes">
+          <div class="product-card-body">
+            <h3>Layer Cakes</h3>
+            <p>From ₹900/kg · Available year-round</p>
+          </div>
+        </a>
+        <a href="menu.html" class="product-card">
+          <img src="fresh-flowers.jpeg" class="product-image" alt="Fresh Flower Cakes">
+          <div class="product-card-body">
+            <h3>Fresh Flower Cakes</h3>
+            <p>From ₹1200/kg · Real & edible flowers</p>
+          </div>
+        </a>
+        <a href="menu.html" class="product-card">
+          <img src="jar-cakes.jpeg" class="product-image" alt="Jar Cakes">
+          <div class="product-card-body">
+            <h3>Jar Cakes</h3>
+            <p>₹150 per jar · Perfect for gifting</p>
+          </div>
+        </a>
+        <a href="menu.html" class="product-card">
+          <img src="fudgy-brownies.jpeg" class="product-image" alt="Fudgy Brownies">
+          <div class="product-card-body">
+            <h3>Fudgy Brownies</h3>
+            <p>₹50/piece · 5-piece minimum</p>
+          </div>
+        </a>
+      </div>
+      <div style="text-align:center;margin-top:44px;">
+        <a href="menu.html" class="cta-primary">View Full Menu →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ HOW IT WORKS ═══════════ -->
+  <section class="content-section">
+    <div style="text-align:center;">
+      <p class="tag-line">How It Works</p>
+      <h2 class="section-heading">From Your Idea to Your Doorstep</h2>
+    </div>
+    <div class="process-grid" data-stagger>
+      <div class="process-card">
+        <div class="process-icon">🛒</div>
+        <h3>Choose & Order</h3>
+        <p>Browse our menu, pick your cake, choose the size, and place your order online — takes under 5 minutes.</p>
+      </div>
+      <div class="process-card">
+        <div class="process-icon">🎨</div>
+        <h3>We Design & Bake</h3>
+        <p>Our baker crafts your order from scratch using fresh ingredients. Custom designs are discussed via WhatsApp.
+        </p>
+      </div>
+      <div class="process-card">
+        <div class="process-icon">📦</div>
+        <h3>Packed Beautifully</h3>
+        <p>Every order is carefully packaged to preserve its design and freshness during delivery or pickup.</p>
+      </div>
+      <div class="process-card">
+        <div class="process-icon">🎉</div>
+        <h3>Enjoy & Celebrate</h3>
+        <p>Your cake arrives on your chosen delivery date, ready to make your occasion unforgettable.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ REVIEWS ═══════════ -->
+  <div style="background:#fff7f4;padding:80px 0;">
+    <div class="content-section" style="padding-top:0;padding-bottom:0;">
+      <div style="text-align:center;">
+        <p class="tag-line">Customer Love</p>
+        <h2 class="section-heading">What People Are Saying</h2>
+      </div>
+      <div class="reviews-grid" data-stagger>
+        <div class="review-card">
+          <div class="review-quote">"</div>
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">The polaroid cake was magical — everyone at the party was stunned. I've never seen
+            anything like it. Will definitely order again!</p>
+          <div class="review-author">Priya S.</div>
+          <div class="review-location">Andheri, Mumbai</div>
+        </div>
+        <div class="review-card">
+          <div class="review-quote">"</div>
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">The mango seasonal cake was absolutely divine. You could taste the freshness in every
+            bite. Nothing like what you get from a regular bakery.</p>
+          <div class="review-author">Rohan M.</div>
+          <div class="review-location">Bandra, Mumbai</div>
+        </div>
+        <div class="review-card">
+          <div class="review-quote">"</div>
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">Ordered the constellation cake for my daughter's birthday — she was in tears! Stunning
+            design, perfectly moist cake. Highly recommend.</p>
+          <div class="review-author">Neha K.</div>
+          <div class="review-location">Powai, Mumbai</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ FINALE CTA ═══════════ -->
+  <div class="finale-cta">
+    <h2>Ready to Make It Special?</h2>
+    <p>Order your dream cake today. We bake fresh for every occasion — birthdays, anniversaries, festivals, and beyond.
+    </p>
+    <a href="menu.html" class="cta-white">🍰 Order Now</a>
+  </div>
+
+  <!-- ═══════════ FOOTER ═══════════ -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <h3>Elegance Bakes</h3>
+        <p>Handcrafted homemade desserts baked fresh with love for every celebration in Mumbai.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="menu.html">Menu</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="about.html">About Us</a></li>
+        </ul>
+      </div>
+      <div class="footer-contact">
+        <h4>Get in Touch</h4>
+        <p>📞 <a href="tel:+917715972816" style="color:#5b3a3a;text-decoration:none;">+91 7715972816</a></p>
+        <p>📧 <a href="mailto:elegancebakes@email.com"
+            style="color:#5b3a3a;text-decoration:none;">elegancebakes@email.com</a></p>
+        <p>📍 Mumbai, Maharashtra</p>
+        <p style="margin-top:12px;"><a href="https://www.instagram.com/elegance_bakes" target="_blank"
+            style="color:#d4a574;font-weight:600;text-decoration:none;">@elegance_bakes on Instagram ↗</a></p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Elegance Bakes. All rights reserved. · <a href="login.html" style="color:#8b5b5b;">Login</a> · <a
+          href="register.html" style="color:#8b5b5b;">Register</a></p>
+    </div>
+  </footer>
+
+  <!-- AUTH MODAL -->
+  <div id="authModal" class="auth-modal">
+    <div class="auth-modal-inner">
+      <button class="close-btn-modal" onclick="closeAuth()">×</button>
+      <div id="loginFormContainer" class="form-container active">
+        <h2 style="font-family:'Playfair Display';color:#d4a574;">Login</h2>
+        <form id="loginForm">
+          <div class="input-box"><input type="email" id="loginEmail" placeholder="Email Address" required></div>
+          <div class="input-box"><input type="password" id="loginPassword" placeholder="Password" required></div>
+          <p id="loginError" style="color:#c0392b;font-size:14px;display:none;"></p>
+          <button type="submit" class="btn">Login</button>
+        </form>
+        <p>Don't have an account? <span class="switch-link" onclick="window.location.href='register.html'">Register
+            here</span></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const authModal = document.getElementById('authModal');
+      window.openAuth = () => { authModal.classList.add('active'); document.body.style.overflow = 'hidden'; };
+      window.closeAuth = () => { authModal.classList.remove('active'); document.body.style.overflow = 'auto'; };
+      window.placeOrder = () => { localStorage.getItem('userName') ? window.location.href = 'menu.html' : openAuth(); };
+      window.logoutHeader = () => {
+        localStorage.removeItem('userName');
+        document.getElementById('userMenu').style.display = 'none';
+        document.getElementById('loginIcon').style.display = 'flex';
+        showToast('Logged out successfully', 'info');
+      };
+
+      // Show initial avatar if logged in
+      const savedName = localStorage.getItem('userName');
+      if (savedName) {
+        const avatarEl = document.getElementById('userInitial');
+        if (avatarEl) avatarEl.textContent = savedName.charAt(0).toUpperCase();
+        document.getElementById('userMenu').style.display = 'flex';
+        document.getElementById('loginIcon').style.display = 'none';
+      }
+
+      document.getElementById('loginForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+        const errEl = document.getElementById('loginError');
+        errEl.style.display = 'none';
+        try {
+          const res = await fetch('api/login.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password }) });
+          const data = await res.json();
+          if (data.status === 'success') {
+            localStorage.setItem('userName', data.user_name || email.split('@')[0]);
+            closeAuth(); location.reload();
+          } else {
+            errEl.textContent = '❌ ' + data.message; errEl.style.display = 'block';
+          }
+        } catch { errEl.textContent = '❌ Network error.'; errEl.style.display = 'block'; }
+      });
+    });
+  </script>
+
+  <script src="js/reveal.js"></script>
+  <script src="js/profile-script.js"></script>
+</body>
+
+</html>

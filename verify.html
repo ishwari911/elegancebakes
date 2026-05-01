@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify OTP - Elegance Bakes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600;700"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        :root {
+            --gold-50: #f8e8d9;
+            --gold-100: #f5ecea;
+            --gold-300: #d4a574;
+            --gold-400: #8b735f;
+            --gold-500: #e6c7a3;
+        }
+
+        body {
+            font-family: 'Playfair Display', serif !important;
+            background: linear-gradient(135deg, var(--gold-50) 0%, var(--gold-100) 50%, var(--gold-50) 100%) !important;
+        }
+
+        h1 {
+            font-family: 'Great Vibes', cursive !important;
+            font-size: clamp(2.5rem, 6vw, 4rem) !important;
+            color: var(--gold-300) !important;
+            text-shadow: 0 2px 4px rgba(212, 165, 116, 0.3) !important;
+        }
+
+        #otp {
+            border: 3px solid var(--gold-300) !important;
+            border-radius: 16px !important;
+            background: rgba(255, 255, 255, 0.95) !important;
+            padding: 1.5rem 1rem !important;
+            font-size: 2.5rem !important;
+            font-family: monospace !important;
+            text-align: center !important;
+            letter-spacing: 12px !important;
+            width: 100% !important;
+        }
+
+        #otp:focus {
+            box-shadow: 0 0 0 4px rgba(212, 165, 116, 0.3) !important;
+            transform: scale(1.02) !important;
+        }
+
+        button {
+            background: linear-gradient(135deg, var(--gold-300), var(--gold-500)) !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 12px !important;
+            font-size: 1.2rem !important;
+            font-weight: 600 !important;
+            padding: 1.2rem !important;
+            box-shadow: 0 10px 25px rgba(212, 165, 116, 0.4) !important;
+        }
+
+        button:hover {
+            transform: translateY(-3px) !important;
+            box-shadow: 0 20px 40px rgba(212, 165, 116, 0.6) !important;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex items-center justify-center p-8">
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay"
+        style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:9999;justify-content:center;align-items:center;">
+        <div style="color:white;font-size:20px;">Verifying your sweet code... 🍰</div>
+    </div>
+
+    <div
+        class="w-full max-w-md bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl p-12 border border-gold-300/30 text-center">
+        <h1 class="text-5xl font-bold mb-8">Elegance Bakes</h1>
+
+        <div class="mb-12">
+            <div
+                class="w-24 h-24 bg-gradient-to-r from-gold-300 to-gold-500 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-xl">
+                <span class="text-4xl">📧</span>
+            </div>
+            <h2 class="text-2xl font-semibold text-gold-400 mb-4">Check your email</h2>
+            <p class="text-gold-500 mb-2">6-digit OTP sent to your inbox/spam</p>
+            <p class="text-sm text-gold-400">Valid for 10 minutes only</p>
+        </div>
+
+        <div id="errorMsg" class="p-4 bg-red-50 border-2 border-red-200 text-red-700 rounded-xl mb-8 hidden"></div>
+
+        <form id="verifyForm" class="space-y-8">
+            <div>
+                <label class="block mb-6 text-lg font-semibold text-gold-400">Enter OTP Code</label>
+                <input type="text" id="otp" maxlength="6" placeholder="123456" required autofocus
+                    autocomplete="one-time-code">
+            </div>
+
+            <button type="submit" class="w-full text-lg font-semibold shadow-xl">
+                ✅ Verify & Activate Account
+            </button>
+
+            <div class="pt-6 border-t border-gold-200 space-y-2">
+                <button type="button" id="resendBtn"
+                    style="background:transparent!important;color:#d4a574!important;font-size:1rem!important;padding:0.4rem!important;box-shadow:none!important;border:none!important;text-decoration:underline;cursor:pointer">
+                    🔄 Resend OTP
+                </button>
+                <span id="resendTimer" style="display:none;font-size:0.85rem;color:#8b735f"></span>
+                <br>
+                <a href="register.html" class="text-gold-400 hover:text-gold-500 text-sm">← Back to Registration</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('verifyForm');
+            const otpInput = document.getElementById('otp');
+            const errorMsg = document.getElementById('errorMsg');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            const resendBtn = document.getElementById('resendBtn');
+            const resendTimer = document.getElementById('resendTimer');
+            let cooldownInterval = null;
+
+            // ----- OTP input: digits only, auto-submit on 6 digits -----
+            otpInput.addEventListener('input', function () {
+                this.value = this.value.replace(/[^0-9]/g, '').slice(0, 6);
+                errorMsg.classList.add('hidden');
+            });
+
+            otpInput.addEventListener('keyup', function (e) {
+                if (this.value.length === 6 && e.key !== 'Backspace') {
+                    form.dispatchEvent(new Event('submit'));
+                }
+            });
+
+            // ----- Verify OTP submit -----
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                const otp = otpInput.value.trim();
+                if (!/^\d{6}$/.test(otp)) { showError('Please enter a valid 6-digit OTP'); return; }
+
+                loadingOverlay.style.display = 'flex';
+                form.querySelector('button[type=submit]').disabled = true;
+
+                const pendingEmail = localStorage.getItem('pendingVerifyEmail') || '';
+
+                fetch('api/verify_otp.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ otp, email: pendingEmail })
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        loadingOverlay.style.display = 'none';
+                        form.querySelector('button[type=submit]').disabled = false;
+                        if (data.status === 'success') {
+                            localStorage.removeItem('pendingVerifyEmail');
+                            if (data.user_name) localStorage.setItem('userName', data.user_name);
+                            Swal.fire({
+                                icon: 'success', title: '🎉 Account Verified!',
+                                text: 'Welcome to Elegance Bakes!', timer: 1800, showConfirmButton: false
+                            }).then(() => { window.location.href = 'index.html'; });
+                        } else {
+                            showError(data.message);
+                            // If OTP expired, encourage resend
+                            if (data.message && data.message.toLowerCase().includes('expired')) {
+                                resendTimer.textContent = '👆 Click Resend OTP above to get a new code';
+                                resendTimer.style.display = 'inline';
+                            }
+                            otpInput.focus(); otpInput.select();
+                        }
+                    })
+                    .catch(err => {
+                        loadingOverlay.style.display = 'none';
+                        form.querySelector('button[type=submit]').disabled = false;
+                        showError('Network error. Please try again.');
+                        console.error(err);
+                    });
+            });
+
+            // ----- Resend OTP -----
+            resendBtn.addEventListener('click', function () {
+                const pendingEmail = localStorage.getItem('pendingVerifyEmail') || '';
+                if (!pendingEmail) {
+                    showError('Session lost. Please go back and register again.');
+                    return;
+                }
+
+                resendBtn.disabled = true;
+                resendBtn.textContent = '⏳ Sending...';
+
+                fetch('api/resend_otp.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: pendingEmail })
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            Swal.fire({
+                                icon: 'success', title: 'OTP Sent!',
+                                text: data.message, timer: 2500, showConfirmButton: false
+                            });
+                            startCooldown(180); // 3-minute cooldown
+                        } else {
+                            // If server says wait, extract seconds
+                            const wait = data.wait_sec || 0;
+                            if (wait > 0) {
+                                startCooldown(wait);
+                            } else {
+                                resendBtn.disabled = false;
+                                resendBtn.textContent = '🔄 Resend OTP';
+                            }
+                            showError(data.message);
+                        }
+                    })
+                    .catch(() => {
+                        resendBtn.disabled = false;
+                        resendBtn.textContent = '🔄 Resend OTP';
+                        showError('Network error. Could not resend OTP.');
+                    });
+            });
+
+            function startCooldown(seconds) {
+                clearInterval(cooldownInterval);
+                let remaining = seconds;
+                resendBtn.disabled = true;
+                updateCooldownUI(remaining);
+                cooldownInterval = setInterval(() => {
+                    remaining--;
+                    if (remaining <= 0) {
+                        clearInterval(cooldownInterval);
+                        resendBtn.textContent = '🔄 Resend OTP';
+                        resendBtn.disabled = false;
+                        resendTimer.style.display = 'none';
+                    } else {
+                        updateCooldownUI(remaining);
+                    }
+                }, 1000);
+            }
+
+            function updateCooldownUI(remaining) {
+                const m = String(Math.floor(remaining / 60)).padStart(2, '0');
+                const s = String(remaining % 60).padStart(2, '0');
+                resendBtn.textContent = `🔄 Resend OTP`;
+                resendTimer.textContent = `(wait ${m}:${s})`;
+                resendTimer.style.display = 'inline';
+            }
+
+            function showError(message) {
+                errorMsg.textContent = message;
+                errorMsg.classList.remove('hidden');
+            }
+        });
+    </script>
+</body>
+
+</html>

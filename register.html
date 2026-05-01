@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register — Elegance Bakes</title>
+    <link rel="icon" href="logo.png">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        /* ===== RESET ===== */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Playfair Display', serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f8e8d9 0%, #f5ecea 60%, #f8e8d9 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        /* ===== CARD ===== */
+        .register-card {
+            background: #fff;
+            border-radius: 24px;
+            box-shadow: 0 25px 60px rgba(106, 60, 60, 0.15);
+            padding: 48px 44px;
+            width: 100%;
+            max-width: 520px;
+        }
+
+        /* ===== HEADER ===== */
+        .register-card h1 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 3.2rem;
+            color: #d4a574;
+            text-align: center;
+            margin-bottom: 6px;
+        }
+
+        .register-card .subtitle {
+            text-align: center;
+            color: #8b735f;
+            font-size: 15px;
+            margin-bottom: 32px;
+        }
+
+        /* ===== ERROR BOX ===== */
+        #errorMsg {
+            background: #fff0f0;
+            border: 2px solid #e74c3c;
+            color: #c0392b;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        /* ===== FIELDS ===== */
+        .field {
+            margin-bottom: 18px;
+        }
+
+        .field label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #8b735f;
+            margin-bottom: 6px;
+            letter-spacing: 0.3px;
+        }
+
+        .field input,
+        .field textarea,
+        .field select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #d9c7bd;
+            border-radius: 12px;
+            font-family: 'Playfair Display', serif;
+            font-size: 15px;
+            color: #5b3a3a;
+            background: #fff;
+            transition: border-color 0.25s, box-shadow 0.25s;
+            outline: none;
+        }
+
+        .field input:focus,
+        .field textarea:focus,
+        .field select:focus {
+            border-color: #d4a574;
+            box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.2);
+        }
+
+        .field input.readonly-field {
+            background: #f5f0ed;
+            color: #8b735f;
+            cursor: default;
+        }
+
+        .field textarea {
+            resize: vertical;
+            min-height: 90px;
+            max-height: 160px;
+        }
+
+        /* Two-column row */
+        .field-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        /* ===== SUBMIT BUTTON ===== */
+        .btn-register {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #d4a574, #a0724a);
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            font-family: 'Playfair Display', serif;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 10px 28px rgba(212, 165, 116, 0.45);
+            transition: transform 0.25s, box-shadow 0.25s;
+            margin-top: 8px;
+        }
+
+        .btn-register:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 18px 40px rgba(212, 165, 116, 0.6);
+        }
+
+        .btn-register:disabled {
+            opacity: 0.65;
+            transform: none;
+            cursor: not-allowed;
+        }
+
+        /* ===== FOOTER LINK ===== */
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #8b735f;
+        }
+
+        .login-link a {
+            color: #d4a574;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== LOADING OVERLAY ===== */
+        #loadingOverlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 12px;
+            color: #fff;
+            font-size: 18px;
+        }
+
+        /* MOBILE */
+        @media (max-width: 540px) {
+            .register-card {
+                padding: 32px 24px;
+            }
+
+            .field-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay">
+        <span style="font-size:48px;">🍰</span>
+        Creating your sweet account...
+    </div>
+
+    <div class="register-card">
+        <h1>Elegance Bakes</h1>
+        <p class="subtitle">Create your sweet account</p>
+
+        <div id="errorMsg"></div>
+
+        <form id="registerForm">
+            <div class="field">
+                <label>Full Name</label>
+                <input type="text" id="name" placeholder="Enter your full name" required autocomplete="off">
+            </div>
+
+            <div class="field">
+                <label>Email Address</label>
+                <input type="email" id="email" placeholder="you@example.com" required autocomplete="off">
+            </div>
+
+            <div class="field">
+                <label>Phone Number</label>
+                <input type="tel" id="phone" placeholder="10-digit mobile number" required autocomplete="off"
+                    maxlength="10">
+            </div>
+
+            <div class="field-row">
+                <div class="field">
+                    <label>Pincode</label>
+                    <input type="text" id="pincode" placeholder="421201" maxlength="6" required>
+                </div>
+                <div class="field">
+                    <label>City</label>
+                    <input type="text" id="city" value="Dombivli" class="readonly-field" readonly>
+                </div>
+            </div>
+
+            <div class="field">
+                <label>Delivery Address</label>
+                <textarea id="address" placeholder="House/Flat No, Street, Area — min 10 characters"
+                    required></textarea>
+            </div>
+
+            <div class="field">
+                <label>Password <span style="color:#aaa;font-weight:400">(min 8 characters)</span></label>
+                <input type="password" id="password" placeholder="••••••••" minlength="8" required>
+            </div>
+
+            <button type="submit" class="btn-register">🧁 Create Account &amp; Send OTP</button>
+        </form>
+
+        <p class="login-link">Already have an account? <a href="login.html">Login here</a></p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('registerForm');
+            const errorMsg = document.getElementById('errorMsg');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            const pincodeInput = document.getElementById('pincode');
+
+            pincodeInput.addEventListener('input', function () {
+                let pin = this.value.replace(/[^0-9]/g, '').slice(0, 6);
+                this.value = pin;
+                if (pin.length === 6) {
+                    let pinNum = parseInt(pin);
+                    if (pinNum < 421201 || pinNum > 421405) {
+                        showError('Delivery available only in pincodes 421201-421405');
+                    } else {
+                        errorMsg.style.display = 'none';
+                    }
+                }
+            });
+
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                const formData = {
+                    name: document.getElementById('name').value.trim(),
+                    email: document.getElementById('email').value.trim(),
+                    phone: document.getElementById('phone').value.trim(),
+                    pincode: document.getElementById('pincode').value.trim(),
+                    address: document.getElementById('address').value.trim(),
+                    password: document.getElementById('password').value.trim()
+                };
+
+                if (!formData.name || !formData.email || !formData.phone || !formData.pincode || !formData.address || !formData.password) {
+                    showError('Please fill all fields'); return;
+                }
+                if (!/^[0-9]{10}$/.test(formData.phone)) { showError('Phone must be 10 digits'); return; }
+                let pinNum = parseInt(formData.pincode);
+                if (pinNum < 421201 || pinNum > 421405) { showError('Delivery only in pincodes 421201-421405'); return; }
+                if (formData.address.length < 10) { showError('Please enter complete address'); return; }
+                if (formData.password.length < 8) { showError('Password must be 8+ characters'); return; }
+
+                loadingOverlay.style.display = 'flex';
+                form.querySelector('button').disabled = true;
+
+                fetch('api/register.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        loadingOverlay.style.display = 'none';
+                        form.querySelector('button').disabled = false;
+                        if (data.status === 'success') {
+                            localStorage.setItem('pendingVerifyEmail', formData.email);
+                            Swal.fire({ icon: 'success', title: 'Account Created!', text: data.message, timer: 2000, showConfirmButton: false })
+                                .then(() => { window.location.href = 'verify.html'; });
+                        } else {
+                            showError(data.message);
+                        }
+                    })
+                    .catch(err => {
+                        loadingOverlay.style.display = 'none';
+                        form.querySelector('button').disabled = false;
+                        showError('Network error. Please try again.');
+                        console.error(err);
+                    });
+            });
+
+            function showError(message) {
+                errorMsg.textContent = message;
+                errorMsg.style.display = 'block';
+                errorMsg.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    </script>
+</body>
+
+
+</html>

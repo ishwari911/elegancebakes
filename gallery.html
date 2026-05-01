@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery — Elegance Bakes</title>
+  <meta name="description"
+    content="Browse our gallery of handcrafted cakes, jar desserts, custom creations and brownies by Elegance Bakes, Mumbai.">
+  <link rel="icon" href="logo.png">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="js/auth.js"></script>
+  <script src="js/loader.js"></script>
+  <script src="js/toast.js"></script>
+  <script src="js/scroll-reveal.js"></script>
+  <script src="js/header-auth.js"></script>
+  <style>
+    /* auth modal */
+    .auth-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      z-index: 99999;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .auth-modal.active {
+      display: flex;
+    }
+
+    .auth-modal-inner {
+      background: #fff;
+      padding: 36px;
+      border-radius: 18px;
+      max-width: 420px;
+      width: 90%;
+      position: relative;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    }
+
+    .close-btn-modal {
+      position: absolute;
+      top: 10px;
+      right: 14px;
+      background: none;
+      border: none;
+      font-size: 28px;
+      cursor: pointer;
+      color: #888;
+    }
+
+    .input-box {
+      margin: 14px 0;
+    }
+
+    .input-box input {
+      width: 100%;
+      padding: 13px;
+      border: 2px solid #d4a574;
+      border-radius: 10px;
+      font-size: 15px;
+      font-family: 'Playfair Display', serif;
+      box-sizing: border-box;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #d4a574, #a0724a);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-family: 'Playfair Display', serif;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    /* Hero */
+    .gallery-hero {
+      background: #f5ecea;
+      padding: 40px 24px 40px;
+      text-align: center;
+    }
+
+    .gallery-hero h1 {
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(3rem, 8vw, 6rem);
+      color: #6a3c3c;
+      margin: 14px 0 16px;
+    }
+
+    .gallery-hero p {
+      font-size: clamp(15px, 2vw, 18px);
+      color: #8b5b5b;
+      max-width: 540px;
+      margin: 0 auto;
+      line-height: 1.8;
+    }
+
+    /* Filters */
+    .filter-bar {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding: 36px 24px 0;
+    }
+
+    .filter-btn {
+      padding: 9px 22px;
+      border-radius: 30px;
+      border: 2px solid rgba(212, 165, 116, 0.4);
+      background: white;
+      color: #6a3c3c;
+      font-family: 'Playfair Display', serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: linear-gradient(135deg, #6a3c3c, #a0724a);
+      color: white;
+      border-color: transparent;
+    }
+
+    /* Gallery grid */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 22px;
+      max-width: 1200px;
+      margin: 40px auto 80px;
+      padding: 0 24px;
+    }
+
+    .gallery-item {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 12px 36px rgba(106, 60, 60, 0.12);
+      cursor: pointer;
+      aspect-ratio: 4/3;
+      background: #f5ecea;
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s ease;
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.07);
+    }
+
+    .gallery-caption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(transparent, rgba(106, 60, 60, 0.88));
+      color: white;
+      padding: 36px 18px 18px;
+      transform: translateY(100%);
+      transition: transform 0.35s ease;
+    }
+
+    .gallery-item:hover .gallery-caption {
+      transform: translateY(0);
+    }
+
+    .gallery-caption h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: white;
+      margin: 0 0 4px;
+    }
+
+    .gallery-caption p {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.8);
+      margin: 0;
+    }
+
+    /* Lightbox */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.92);
+      z-index: 99998;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .lightbox.show {
+      display: flex;
+    }
+
+    .lightbox img {
+      max-width: 90vw;
+      max-height: 85vh;
+      object-fit: contain;
+      border-radius: 16px;
+      box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5);
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 20px;
+      right: 24px;
+      font-size: 2rem;
+      color: white;
+      cursor: pointer;
+      background: none;
+      border: none;
+      opacity: 0.8;
+      transition: opacity 0.2s;
+    }
+
+    .lightbox-close:hover {
+      opacity: 1;
+    }
+
+    /* CTA strip */
+    .gallery-cta {
+      background: linear-gradient(135deg, #6a3c3c, #a0724a);
+      padding: 70px 24px;
+      text-align: center;
+    }
+
+    .gallery-cta h2 {
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      color: white;
+      margin: 0 0 14px;
+    }
+
+    .gallery-cta p {
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 17px;
+      margin: 0 0 30px;
+    }
+
+    .cta-white {
+      background: white;
+      color: #6a3c3c;
+      padding: 15px 40px;
+      border-radius: 50px;
+      font-family: 'Playfair Display', serif;
+      font-size: 16px;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.3s;
+    }
+
+    .cta-white:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+      color: #6a3c3c;
+    }
+
+    @media(max-width:600px) {
+      .gallery-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="header-container">
+      <div class="logo">
+        <img src="logo.png" alt="Elegance Bakes" onclick="window.location.href='index.html'">
+      </div>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="menu.html">Menu</a></li>
+          <li><a href="gallery.html" class="active">Gallery</a></li>
+          <li><a href="about.html">About</a></li>
+        </ul>
+      </nav>
+      <div class="header-icons">
+        <a href="login.html" id="loginIcon" class="header-icon-link" title="Login">
+          <img src="user.png" alt="Login">
+        </a>
+        <div id="userMenu" class="user-menu-wrap">
+          <div id="userInitial" class="user-avatar" onclick="window.location.href='dashboard.html'" title="Dashboard">U
+          </div>
+          <button class="logout-btn" onclick="logoutHeader()" title="Logout">🚪</button>
+        </div>
+        <a href="cart.html" class="header-icon-link" title="Cart">
+          <img src="cart.png" alt="Cart">
+        </a>
+        <a href="https://www.instagram.com/elegance_bakes" target="_blank" class="header-icon-link" title="Instagram">
+          <img src="instagram.png" alt="Instagram">
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="gallery-hero">
+    <span
+      style="display:inline-block;background:rgba(212,165,116,.15);color:#a0724a;border:1px solid rgba(212,165,116,.4);padding:8px 22px;border-radius:30px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;">Our
+      Creations</span>
+    <h1>Made with Love,<br>Designed to Impress</h1>
+    <p>Every photo you see here started as a dream — then became a real, edible work of art. Here's a glimpse of what
+      we've baked.</p>
+  </section>
+
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+    <button class="filter-btn active" data-filter="all">All Creations</button>
+    <button class="filter-btn" data-filter="cakes">Layer Cakes</button>
+    <button class="filter-btn" data-filter="special">Special Designs</button>
+    <button class="filter-btn" data-filter="treats">Treats & Jars</button>
+    <button class="filter-btn" data-filter="seasonal">Seasonal</button>
+  </div>
+
+  <!-- GALLERY GRID -->
+  <div class="gallery-grid" id="galleryGrid" data-stagger>
+
+    <div class="gallery-item" data-category="cakes" onclick="openLightbox('layer-cakes.jpeg')">
+      <img src="layer-cakes.jpeg" alt="Layer Cake">
+      <div class="gallery-caption">
+        <h3>Classic Layer Cake</h3>
+        <p>Vanilla sponge · Fresh cream · Custom decor</p>
+      </div>
+    </div>
+
+    <div class="gallery-item" data-category="treats" onclick="openLightbox('jar-cakes.jpeg')">
+      <img src="jar-cakes.jpeg" alt="Jar Cakes">
+      <div class="gallery-caption">
+        <h3>Dessert Jars</h3>
+        <p>Perfect gifting option · ₹150 per jar</p>
+      </div>
+    </div>
+
+    <div class="gallery-item" data-category="special" onclick="openLightbox('fresh-flowers.jpeg')">
+      <img src="fresh-flowers.jpeg" alt="Fresh Flower Cake">
+      <div class="gallery-caption">
+        <h3>Fresh Flower Cake</h3>
+        <p>Real & edible blooms · Elegance personified</p>
+      </div>
+    </div>
+
+    <div class="gallery-item" data-category="special" onclick="openLightbox('polaroids.jpeg')">
+      <img src="polaroids.jpeg" alt="Polaroid Cake">
+      <div class="gallery-caption">
+        <h3>Polaroid Memory Cake</h3>
+        <p>Your cherished photos · On edible prints</p>
+      </div>
+    </div>
+
+    <div class="gallery-item" data-category="special" onclick="openLightbox('star-shape.jpeg')">
+      <img src="star-shape.jpeg" alt="Star Shaped Cake">
+      <div class="gallery-caption">
+        <h3>Star Shape Cake</h3>
+        <p>Custom shaped · Celebration special</p>
+      </div>
+    </div>
+
+    <div class="gallery-item" data-category="seasonal" onclick="openLightbox('mango-season.jpeg')">
+      <img src="mango-season.jpeg" alt="Mango Season Cake">
+      <div class="gallery-caption">
+        <h3>Mango Season Special</h3>
+        <p>Fresh Alphonso mangoes · Summer exclusive</p>
+      </div>
+    </div>
+
+    <div class="gallery-item" data-category="treats" onclick="openLightbox('fresh-cookies.jpeg')">
+      <img src="fresh-cookies.jpeg" alt="Fresh Cookies">
+      <div class="gallery-caption">
+        <h3>Fresh Baked Cookies</h3>
+        <p>Choco chip & butter · Made to order</p>
+      </div>
+    </div>
+
+    <div class="gallery-item" data-category="treats" onclick="openLightbox('fudgy-brownies.jpeg')">
+      <img src="fudgy-brownies.jpeg" alt="Fudgy Brownies">
+      <div class="gallery-caption">
+        <h3>Fudgy Brownies</h3>
+        <p>Ultra moist · Dark chocolate · ₹50/pc</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CTA -->
+  <div class="gallery-cta">
+    <h2>Love What You See?</h2>
+    <p>Order your own custom creation — we'll make it exactly the way you imagine it.</p>
+    <a href="menu.html" class="cta-white">🍰 Order Now</a>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <h3>Elegance Bakes</h3>
+        <p>Handcrafted homemade desserts baked fresh with love for every celebration in Mumbai.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="menu.html">Menu</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="about.html">About Us</a></li>
+        </ul>
+      </div>
+      <div class="footer-contact">
+        <h4>Get in Touch</h4>
+        <p>📞 +91 7715972816</p>
+        <p>📧 elegancebakes@email.com</p>
+        <p>📍 Mumbai, Maharashtra</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Elegance Bakes. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+    <img id="lightboxImg" src="" alt="">
+  </div>
+
+  <script src="js/reveal.js"></script>
+  <script>
+    // Auth state
+    const savedName = localStorage.getItem('userName');
+    if (savedName) {
+      document.getElementById('userNameHeader').textContent = `👤 ${savedName}`;
+      document.getElementById('userMenu').style.display = 'flex';
+      document.getElementById('loginIcon').style.display = 'none';
+    }
+    window.logoutHeader = () => {
+      localStorage.removeItem('userName');
+      location.reload();
+    };
+
+    // Filter
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        const filter = this.dataset.filter;
+        document.querySelectorAll('.gallery-item').forEach(item => {
+          item.style.display = (filter === 'all' || item.dataset.category === filter) ? 'block' : 'none';
+        });
+      });
+    });
+
+    // Lightbox
+    function openLightbox(src) {
+      document.getElementById('lightboxImg').src = src;
+      document.getElementById('lightbox').classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('show');
+      document.body.style.overflow = 'auto';
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+  </script>
+</body>
+
+</html>

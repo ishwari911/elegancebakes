@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Cart | Elegance Bakes</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Great+Vibes&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="js/auth.js"></script>
+  <script src="js/loader.js"></script>
+  <script src="js/toast.js"></script>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+  <style>
+    :root {
+      --bg: #f5ecea;
+      --header: #d9c7bd;
+      --primary: #6a3c3c;
+      --primary-hover: #8b5b5b;
+      --text-muted: #5b3a3a;
+      --text-light: #c7a9a0;
+      --card-bg: linear-gradient(135deg, #fff7f4, #f8f4f1);
+      --border: rgba(106, 60, 60, 0.12);
+      --shadow: 0 18px 45px rgba(0, 0, 0, 0.10);
+      --shadow-hover: 0 35px 70px rgba(0, 0, 0, 0.18);
+    }
+
+    body {
+      font-family: "Playfair Display", serif;
+      background: var(--bg);
+      overflow-x: hidden;
+    }
+
+    .cart-container {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 24px;
+    }
+
+    .cart-header {
+      text-align: center;
+      padding: 60px 20px;
+      background: var(--card-bg);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 40px;
+    }
+
+    .cart-title {
+      font-family: "Great Vibes", cursive;
+      font-size: 48px;
+      color: var(--primary);
+      margin: 0 0 10px;
+      letter-spacing: 0.4px;
+    }
+
+    .cart-subtitle {
+      font-size: 20px;
+      color: var(--text-muted);
+      margin: 0;
+    }
+
+    .cart-grid {
+      display: grid;
+      grid-template-columns: 1.6fr 0.9fr;
+      gap: 36px;
+      margin-bottom: 60px;
+    }
+
+    @media (max-width:900px) {
+      .cart-grid {
+        grid-template-columns: 1fr;
+        gap: 28px;
+      }
+    }
+
+    .items-section {
+      background: var(--card-bg);
+      border-radius: 26px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .items-section h2 {
+      font-family: "Great Vibes", cursive;
+      font-size: 38px;
+      color: var(--primary);
+      margin: 0;
+      padding: 26px 30px 0;
+      letter-spacing: 0.4px;
+    }
+
+    .items-list {
+      padding: 30px;
+      max-height: 70vh;
+      overflow-y: auto;
+    }
+
+    .empty-cart {
+      padding: 60px 30px;
+      text-align: center;
+      color: var(--text-muted);
+    }
+
+    .empty-cart p {
+      font-size: 20px;
+      margin: 0 0 24px;
+    }
+
+    .cart-item {
+      display: flex;
+      gap: 20px;
+      padding: 24px;
+      background: white;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      margin-bottom: 16px;
+      transition: all 0.3s ease;
+    }
+
+    .cart-item:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .cart-thumb {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .item-details {
+      flex: 1;
+    }
+
+    .item-details h3 {
+      font-size: 24px;
+      color: var(--primary);
+      margin: 0 0 8px;
+      font-weight: 600;
+    }
+
+    .item-meta {
+      color: var(--text-light);
+      font-size: 16px;
+      margin-bottom: 12px;
+      font-weight: 500;
+    }
+
+    .item-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: flex-end;
+      min-width: 140px;
+    }
+
+    .qty-control {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 4px;
+    }
+
+    .qty-btn {
+      width: 42px;
+      height: 42px;
+      border: none;
+      background: var(--header);
+      color: var(--primary);
+      border-radius: 10px;
+      font-size: 20px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .qty-btn:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    .qty-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .qty-display {
+      min-width: 48px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--primary);
+    }
+
+    .line-total {
+      font-size: 22px;
+      color: var(--primary);
+      font-weight: 700;
+      margin: 8px 0;
+    }
+
+    .btn-remove {
+      background: transparent;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      padding: 8px 16px;
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-remove:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    .summary-section {
+      background: var(--card-bg);
+      border-radius: 26px;
+      padding: 30px;
+      box-shadow: var(--shadow);
+      height: fit-content;
+    }
+
+    .items-pill {
+      display: inline-flex;
+      gap: 8px;
+      padding: 10px 16px;
+      background: rgba(106, 60, 60, 0.08);
+      color: var(--primary);
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+
+    .summary-title {
+      font-family: "Great Vibes", cursive;
+      font-size: 28px;
+      color: var(--primary);
+      margin: 0 0 24px;
+    }
+
+    .summary-line {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px dashed var(--border);
+      font-size: 16px;
+    }
+
+    .summary-line:last-child {
+      border-bottom: none;
+    }
+
+    .summary-line span {
+      color: var(--text-muted);
+    }
+
+    .summary-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0 16px;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary);
+      border-top: 2px solid var(--border);
+      margin-top: 12px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 16px;
+      font-family: "Playfair Display", serif;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+      display: block;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #6a3c3c, #8b5b5b);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.5;
+      transform: none;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 2px solid var(--primary);
+      color: var(--primary);
+    }
+
+    .btn-secondary:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    dialog {
+      border: none;
+      border-radius: 26px;
+      padding: 0;
+      max-width: 540px;
+      width: 92vw;
+      box-shadow: var(--shadow-hover);
+    }
+
+    dialog::backdrop {
+      background: rgba(106, 60, 60, 0.4);
+    }
+
+    .modal-header {
+      padding: 24px 30px 0;
+      position: relative;
+    }
+
+    .modal-title {
+      font-family: "Great Vibes", cursive;
+      font-size: 32px;
+      color: var(--primary);
+      margin: 0;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 24px;
+      right: 30px;
+      background: none;
+      border: none;
+      font-size: 28px;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .modal-qr {
+      width: 220px;
+      height: 220px;
+      object-fit: contain;
+      border: 2px solid var(--border);
+      border-radius: 20px;
+      margin: 20px auto 10px;
+      display: block;
+    }
+
+    .modal-amount {
+      text-align: center;
+      font-size: 22px;
+      color: var(--primary);
+      font-weight: 700;
+      margin: 0 0 16px;
+    }
+
+    .modal-footer {
+      padding: 0 30px 30px;
+    }
+
+    /* Delivery form inside modal */
+    .delivery-form {
+      padding: 0 30px;
+    }
+
+    .delivery-form label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .delivery-form textarea,
+    .delivery-form input[type="date"],
+    .delivery-form input[type="text"] {
+      width: 100%;
+      padding: 12px 14px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      font-family: "Playfair Display", serif;
+      font-size: 15px;
+      color: var(--primary);
+      background: white;
+      box-sizing: border-box;
+      transition: border-color 0.2s;
+      margin-bottom: 14px;
+      resize: none;
+    }
+
+    .delivery-form textarea:focus,
+    .delivery-form input:focus {
+      outline: none;
+      border-color: var(--primary-hover);
+      box-shadow: 0 0 0 3px rgba(106, 60, 60, 0.08);
+    }
+
+    .delivery-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 16px 30px 16px;
+    }
+
+    /* ── Razorpay-style Payment UI ── */
+    #rzp-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #2d3748;
+      color: white;
+      padding: 14px 20px;
+      border-radius: 12px 12px 0 0;
+    }
+
+    #rzp-logo {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    #rzp-amount-strip {
+      font-size: 14px;
+    }
+
+    #rzp-amount-strip strong {
+      font-size: 18px;
+      color: #81e6d9;
+    }
+
+    #rzp-tabs {
+      display: flex;
+      border-bottom: 2px solid #e2e8f0;
+      background: #f7fafc;
+    }
+
+    .rzp-tab {
+      flex: 1;
+      padding: 12px 0;
+      border: none;
+      background: none;
+      font-family: 'Playfair Display', serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: #718096;
+      cursor: pointer;
+      transition: all 0.2s;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+    }
+
+    .rzp-tab.active {
+      color: #3182ce;
+      border-bottom-color: #3182ce;
+    }
+
+    .rzp-tab:hover:not(.active) {
+      color: #4a5568;
+      background: #edf2f7;
+    }
+
+    .rzp-panel {
+      padding: 16px 20px 0;
+    }
+
+    .rzp-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #4a5568;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 0 0 6px;
+    }
+
+    .rzp-hint {
+      font-size: 12px;
+      color: #a0aec0;
+      margin: 10px 0 6px;
+      text-align: center;
+    }
+
+    .rzp-input {
+      width: 100%;
+      padding: 11px 14px;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      font-family: 'Playfair Display', serif;
+      font-size: 15px;
+      color: #2d3748;
+      box-sizing: border-box;
+      transition: border-color 0.2s;
+    }
+
+    .rzp-input:focus {
+      outline: none;
+      border-color: #3182ce;
+      box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+    }
+
+    .rzp-input-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .rzp-verify {
+      white-space: nowrap;
+      color: #3182ce;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 4px 0;
+    }
+
+    .rzp-qr-box {
+      display: flex;
+      justify-content: center;
+      padding: 8px 0 14px;
+    }
+
+    .rzp-banks {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      padding-bottom: 16px;
+    }
+
+    .rzp-bank {
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 14px 0;
+      text-align: center;
+      font-weight: 700;
+      font-size: 14px;
+      color: #4a5568;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .rzp-bank:hover,
+    .rzp-bank.selected {
+      border-color: #3182ce;
+      color: #3182ce;
+      background: #ebf8ff;
+    }
+
+    #rzp-processing,
+    #rzp-success {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 36px 20px;
+      text-align: center;
+    }
+
+    .rzp-spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid #e2e8f0;
+      border-top-color: #3182ce;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .rzp-checkmark {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: #2ecc71;
+      color: white;
+      font-size: 28px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes popIn {
+      from {
+        transform: scale(0);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    #rzp-footer {
+      padding: 14px 20px 20px;
+    }
+
+    .rzp-pay-btn {
+      width: 100%;
+      padding: 15px;
+      background: #3182ce;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Playfair Display', serif;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .rzp-pay-btn:hover {
+      background: #2b6cb0;
+      transform: translateY(-1px);
+    }
+
+    .rzp-pay-btn:disabled {
+      background: #a0aec0;
+      cursor: not-allowed;
+      transform: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="cart-container">
+    <header style="background:#d9c7bd;padding:25px 40px;position:sticky;top:0;z-index:100;">
+      <div style="max-width:1200px;margin:auto;display:flex;justify-content:space-between;align-items:center;">
+        <div class="logo">
+          <img src="logo.png" alt="Elegance Bakes" style="width:120px;cursor:pointer;"
+            onerror="this.onerror=null;this.src='default-image.png';">
+        </div>
+        <nav>
+          <ul style="list-style:none;display:flex;gap:60px;padding:0;margin:0;">
+            <li><a href="index.html"
+                style="font-family:'Great Vibes',cursive;font-size:30px;color:#6a3c3c;text-decoration:none;">Home</a>
+            </li>
+            <li><a href="menu.html"
+                style="font-family:'Great Vibes',cursive;font-size:30px;color:#8b5b5b;text-decoration:none;font-weight:bold;">Menu</a>
+            </li>
+            <li><a href="cart.html"
+                style="font-family:'Great Vibes',cursive;font-size:30px;color:#8b5b5b;text-decoration:none;font-weight:bold;">Cart</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <div class="cart-header">
+      <h1 class="cart-title">Your Shopping Cart</h1>
+      <p class="cart-subtitle">Review your delicious selections</p>
+    </div>
+
+    <div class="cart-grid">
+      <section class="items-section">
+        <h2>Your Items</h2>
+        <div class="items-list" id="cartItems"></div>
+      </section>
+      <aside class="summary-section">
+        <div class="items-pill" id="itemsCount">0 items</div>
+        <h3 class="summary-title">Order Summary</h3>
+        <div class="summary-line"><span>Subtotal</span><strong id="subtotal">₹0</strong></div>
+        <div class="summary-line"><span>Delivery</span><strong>Free</strong></div>
+        <div class="summary-line"><span>Taxes (5%)</span><strong id="taxes">₹0</strong></div>
+        <div class="summary-total"><span>Grand Total</span><strong id="grandTotal">₹0</strong></div>
+        <button class="btn btn-primary" id="payNow" disabled>Pay Now</button>
+        <a href="menu.html" class="btn btn-secondary">Continue Shopping</a>
+        <button class="btn btn-secondary" id="clearCart" disabled>Clear Cart</button>
+      </aside>
+    </div>
+  </div>
+
+  <dialog id="paymentModal">
+    <div class="modal-header">
+      <h3 class="modal-title">Complete Your Order</h3>
+      <button class="modal-close" id="closeModal">&times;</button>
+    </div>
+
+    <!-- Step 1: Delivery Details -->
+    <div id="deliveryStep">
+      <div style="padding:16px 30px 0;">
+        <p style="font-size:14px;color:var(--text-muted);margin:0 0 14px;">📦 Please fill in your delivery details
+          before paying.</p>
+      </div>
+      <div class="delivery-form">
+        <label for="deliveryAddress">📍 Delivery Address</label>
+        <textarea id="deliveryAddress" rows="3" placeholder="Flat no., street, area, city, pincode…"
+          required></textarea>
+
+        <label for="deliveryDate">🗓️ Preferred Delivery Date</label>
+        <input type="date" id="deliveryDate" required>
+        <p style="font-size:12px;color:var(--text-light);margin-top:-10px;margin-bottom:14px;">⏱ Please allow at least 2
+          days for baking.</p>
+      </div>
+      <div class="modal-footer" style="padding-top:4px;">
+        <button class="btn btn-primary" id="proceedToPayBtn">Continue to Payment →</button>
+      </div>
+    </div>
+
+  </dialog>
+
+  <script>
+    const LS_KEY = 'bakeryCart';
+    const cartItemsEl = document.getElementById('cartItems');
+    const itemsCountEl = document.getElementById('itemsCount');
+    const subtotalEl = document.getElementById('subtotal');
+    const taxesEl = document.getElementById('taxes');
+    const grandTotalEl = document.getElementById('grandTotal');
+    const payNowBtn = document.getElementById('payNow');
+    const clearCartBtn = document.getElementById('clearCart');
+    const paymentModal = document.getElementById('paymentModal');
+    const modalAmountEl = document.getElementById('rzp-pay-amount');
+    const closeModalBtn = document.getElementById('closeModal');
+
+    function formatPrice(num) {
+      return '₹' + Math.round(num || 0).toLocaleString();
+    }
+
+    function readCart() {
+      try {
+        return JSON.parse(localStorage.getItem(LS_KEY)) || [];
+      } catch {
+        return [];
+      }
+    }
+
+    function writeCart(cart) {
+      localStorage.setItem(LS_KEY, JSON.stringify(cart));
+    }
+
+    // Normalize item for DISPLAY only — does NOT change stored id
+    function normalizeItem(item) {
+      const rawName = (item.name || item.title || 'Unknown Cake').trim();
+      const price = Number(item.price) || Number(item.original_price) || 0;
+      const qty = Math.max(1, Number(item.qty) || Number(item.quantity) || 1);
+      const kg = Number(item.kg) || 1;
+      const image = item.image || item.img || 'default-image.png';
+
+      // Strip any existing "(Xkg)" suffix so we never double-append it
+      const cleanName = rawName.replace(/\s*\([\d.]+\s*kg\)/gi, '').trim();
+      const displayName = kg > 1 ? `${cleanName} (${kg}kg)` : cleanName;
+
+      // Preserve the ORIGINAL stored id — never regenerate it
+      const id = item.id || rawName.toLowerCase().replace(/[^a-z0-9]/g, '-');
+
+      return { id, name: displayName, price, qty, image, kg };
+    }
+
+    function renderCart() {
+      const rawCart = readCart();
+      const cart = rawCart.map(normalizeItem).filter(item => item.price > 0); // Filter out invalid items
+
+      // Clean up cart if all items are invalid
+      if (cart.length === 0 && rawCart.length > 0) {
+        localStorage.removeItem(LS_KEY);
+        renderCart();
+        return;
+      }
+
+      if (cart.length === 0) {
+        cartItemsEl.innerHTML = `<div class="empty-cart">
+          <p>Your cart is deliciously empty. Go get some cake!</p>
+          <a href="menu.html" class="btn btn-primary" style="max-width:220px;margin:0 auto;">Browse Menu</a>
+        </div>`;
+        itemsCountEl.textContent = '0 items';
+        subtotalEl.textContent = formatPrice(0);
+        taxesEl.textContent = formatPrice(0);
+        grandTotalEl.textContent = formatPrice(0);
+        payNowBtn.disabled = true;
+        payNowBtn.style.opacity = '0.5';
+        clearCartBtn.disabled = true;
+        return;
+      }
+
+      // Enable buttons
+      payNowBtn.disabled = false;
+      payNowBtn.style.opacity = '1';
+      clearCartBtn.disabled = false;
+
+      // Calculate totals
+      const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+      const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+      const taxes = subtotal * 0.05;
+      const grandTotal = subtotal + taxes;
+
+      // Update display
+      itemsCountEl.textContent = `${totalItems} item${totalItems === 1 ? '' : 's'}`;
+      subtotalEl.textContent = formatPrice(subtotal);
+      taxesEl.textContent = formatPrice(taxes);
+      grandTotalEl.textContent = formatPrice(grandTotal);
+      if (modalAmountEl) modalAmountEl.textContent = formatPrice(grandTotal);
+
+      // Render items
+      cartItemsEl.innerHTML = cart.map(item => {
+        const lineTotal = item.price * item.qty;
+        return `<div class="cart-item" data-id="${item.id}">
+          <img class="cart-thumb" src="${item.image}" alt="${item.name}" onerror="this.onerror=null;this.src='default-image.png';">
+          <div class="item-details">
+            <h3>${item.name}</h3>
+            <p class="item-meta">${formatPrice(item.price)} each</p>
+            <div class="item-controls">
+              <div class="qty-control">
+                <button class="qty-btn" onclick="changeQty('${item.id}',-1)">−</button>
+                <span class="qty-display">${item.qty}</span>
+                <button class="qty-btn" onclick="changeQty('${item.id}',1)">+</button>
+              </div>
+              <div class="line-total">${formatPrice(lineTotal)}</div>
+              <button class="btn-remove" onclick="removeItem('${item.id}')">Remove</button>
+            </div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    function changeQty(id, delta) {
+      // Work on RAW cart items — do NOT normalize before saving
+      const cart = readCart();
+      const itemIndex = cart.findIndex(i => i.id === id);
+      if (itemIndex === -1) return;
+
+      cart[itemIndex].qty = Math.max(1, (Number(cart[itemIndex].qty) || 1) + delta);
+
+      if (cart[itemIndex].qty === 0) {
+        cart.splice(itemIndex, 1);
+      }
+
+      writeCart(cart);
+      renderCart();
+    }
+
+    function removeItem(id) {
+      // Match by the raw stored id
+      const cart = readCart().filter(item => item.id !== id);
+      writeCart(cart);
+      renderCart();
+    }
+
+    // ── Delivery Date: set min to today+2 ──
+    const deliveryDateInput = document.getElementById('deliveryDate');
+    const minDate = new Date();
+    minDate.setDate(minDate.getDate() + 2);
+    if (deliveryDateInput) deliveryDateInput.min = minDate.toISOString().split('T')[0];
+
+    // ── Open modal (delivery step only) ──
+    payNowBtn?.addEventListener('click', () => {
+      if (readCart().length > 0) {
+        paymentModal.showModal();
+      }
+    });
+
+    closeModalBtn?.addEventListener('click', () => paymentModal.close());
+
+    // ── Proceed to Payment: close modal, then open Razorpay ──
+    document.getElementById('proceedToPayBtn')?.addEventListener('click', async () => {
+      const deliveryAddress = document.getElementById('deliveryAddress').value.trim();
+      const deliveryDate = document.getElementById('deliveryDate').value;
+
+      if (!deliveryAddress) { showToast('Please enter your delivery address.', 'warning'); return; }
+      if (!deliveryDate) { showToast('Please choose a delivery date.', 'warning'); return; }
+
+      const cart = readCart().map(normalizeItem).filter(i => i.price > 0);
+      if (cart.length === 0) { paymentModal.close(); return; }
+
+      const subtotal = cart.reduce((sum, i) => sum + i.price * i.qty, 0);
+      const grandTotal = Math.round(subtotal * 1.05 * 100) / 100;
+
+      // Close the delivery modal BEFORE Razorpay opens
+      paymentModal.close();
+
+      const proceedBtn = document.getElementById('proceedToPayBtn');
+      proceedBtn.disabled = true;
+      proceedBtn.textContent = '⏳ Connecting to Razorpay…';
+
+      try {
+        // Create Razorpay order server-side
+        const orderRes = await fetch('api/create_razorpay_order.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ amount: grandTotal })
+        });
+        const orderData = await orderRes.json();
+
+        proceedBtn.disabled = false;
+        proceedBtn.textContent = 'Continue to Payment →';
+
+        if (orderData.status !== 'success') {
+          showToast('❌ ' + (orderData.message || 'Could not start payment'), 'error');
+          return;
+        }
+
+        // Open Razorpay checkout popup
+        const rzp = new Razorpay({
+          key: orderData.key_id,
+          amount: orderData.amount,
+          currency: 'INR',
+          name: 'Elegance Bakes',
+          description: `Order for ${cart.length} item(s)`,
+          order_id: orderData.order_id,
+          theme: { color: '#6a3c3c' },
+
+          handler: async function (response) {
+            showToast('✅ Payment received! Saving your order…', 'success', 3000);
+
+            try {
+              const verifyRes = await fetch('api/verify_payment.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  razorpay_order_id: response.razorpay_order_id,
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_signature: response.razorpay_signature,
+                  items: cart,
+                  delivery_address: deliveryAddress,
+                  delivery_date: deliveryDate,
+                  user_id: localStorage.getItem('userId') || null   // session fallback for InfinityFree
+                })
+              });
+              const verifyData = await verifyRes.json();
+
+              // Store order details for confirmation page
+              sessionStorage.setItem('lastOrder', JSON.stringify({
+                items: cart,
+                delivery_address: deliveryAddress,
+                delivery_date: deliveryDate,
+                payment_id: response.razorpay_payment_id,
+                email: verifyData.email || ''
+              }));
+
+              // Clear cart
+              localStorage.removeItem(LS_KEY);
+
+              if (verifyData.status === 'success') {
+                // ✅ Redirect to order confirmation page
+                window.location.href = 'order-confirmation.html';
+              } else {
+                renderCart();
+                showToast('⚠️ Payment done but order save failed. Please contact support with ID: ' + response.razorpay_payment_id, 'warning', 10000);
+              }
+            } catch {
+              renderCart();
+              showToast('⚠️ Payment done but verification failed. Please contact support.', 'warning', 8000);
+            }
+          },
+
+          modal: {
+            ondismiss: function () {
+              showToast('Payment cancelled.', 'info');
+            }
+          }
+        });
+
+        rzp.open();
+
+      } catch (err) {
+        proceedBtn.disabled = false;
+        proceedBtn.textContent = 'Continue to Payment →';
+        showToast('❌ Network error. Please try again.', 'error');
+        console.error(err);
+      }
+    });
+
+    clearCartBtn?.addEventListener('click', () => {
+      if (confirm('Clear all items from cart?')) {
+        localStorage.removeItem(LS_KEY);
+        renderCart();
+      }
+    });
+
+    // Global functions for onclick handlers
+    window.changeQty = changeQty;
+    window.removeItem = removeItem;
+
+    // Initial render
+    renderCart();
+  </script>
+
+  <!-- Removed missing JS files -->
+
+  <!-- ===== STEP 2: YOUR AUTH MODAL (PASTE BEFORE </body>) ===== -->
+  <div class="auth-modal" id="authModal">
+    <div class="auth-modal-inner">
+      <button class="close-btn-modal" onclick="closeAuth()">×</button>
+
+      <!-- LOGIN -->
+      <div class="form-box login">
+        <h2>Login</h2>
+        <form id="loginForm">
+          <div class="input-box">
+            <input type="email" id="loginEmail" placeholder="Email" required>
+          </div>
+          <div class="input-box">
+            <input type="text" id="loginOTP" placeholder="Enter OTP" maxlength="6">
+          </div>
+          <button class="btn" type="submit">Login</button>
+        </form>
+      </div>
+
+      <!-- REGISTER -->
+      <div class="form-box register">
+        <h2>Register</h2>
+        <form id="registerForm">
+          <div class="input-box">
+            <input type="text" id="regName" placeholder="Full Name" required>
+          </div>
+          <div class="input-box">
+            <input type="email" id="regEmail" placeholder="Email" required>
+          </div>
+          <div class="input-box" id="otpField" style="display:none;">
+            <input type="text" id="regOTP" placeholder="Enter OTP" maxlength="6">
+          </div>
+          <button type="button" class="btn" id="sendOTPBtn">Send OTP</button>
+          <button type="submit" class="btn" id="registerBtn" style="display:none;">Register</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- ===== END MODAL ===== -->
+</body>
+
+</html>
