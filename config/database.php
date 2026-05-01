@@ -44,19 +44,19 @@ try {
 define('SMTP_HOST',     'smtp.gmail.com');
 define('SMTP_PORT',     587);
 define('SMTP_USER',     'elegancebakes22@gmail.com');
-define('SMTP_PASS',     'vcnlyghkyagruevr');
+define('SMTP_PASS',     '****************');
 define('SMTP_FROM',     'elegancebakes22@gmail.com');
 define('SMTP_FROM_NAME','Elegance Bakes');
 
 // ===== RAZORPAY KEYS =====
 // ⚠️  REPLACE THESE WITH YOUR REAL KEYS from https://dashboard.razorpay.com → Settings → API Keys
 // Without real keys, payments WILL fail with "Payment not verified"!
-define('RAZORPAY_KEY_ID',     'rzp_live_SPDKcQNd1ecgXx');
-define('RAZORPAY_KEY_SECRET', 'Q1Q0Zhwb96tEvhlgAGdbvML4');
+define('RAZORPAY_KEY_ID',     '*******************');
+define('RAZORPAY_KEY_SECRET', '*********************');
 
 // ===== ADMIN CREDENTIALS =====
 // Username: admin  |  Password: EleganceBakes2026
 define('ADMIN_USERNAME', 'admin');
-define('ADMIN_PASSWORD_HASH', '$2y$10$HVm5I2B4ARg5kGOlAtEPYOLYXFcyKrpJG4Y3Ml2ltXaNAqyp68cyO');
+define('ADMIN_PASSWORD_HASH', '***********************');
 ?>
 
