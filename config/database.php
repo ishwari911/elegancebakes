@@ -1,9 +1,9 @@
 <?php
 // ---- LIVE (InfinityFree) ----
 $host     = 'sql200.infinityfree.com';
-$dbname   = 'if0_41054761_elegance_bakes';
-$username = 'if0_41054761';
-$password = 'elegance2026';
+$dbname   = '**********';
+$username = '***************';
+$password = '*********';
 
 // ---- LOCAL (XAMPP) — uncomment these and comment out the above when testing locally ----
 // $host     = 'localhost';
